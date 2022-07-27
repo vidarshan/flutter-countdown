@@ -1,0 +1,100 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:to_dos/models/Todo.dart';
+import 'package:to_dos/state/counter/actions.dart';
+import 'package:to_dos/state/counter/state.dart';
+import 'package:to_dos/state/todo/actions.dart';
+import 'package:to_dos/state/todo/state.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => CounterState()),
+          ChangeNotifierProvider(create: (context) => ToDoState())
+        ],
+        child: const CupertinoApp(
+          title: 'Flutter Demo',
+          theme: CupertinoThemeData(barBackgroundColor: Colors.amber),
+          home: MyHomePage(title: 'Flutter Demo Home Page'),
+        ));
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late CounterActions counterActions = CounterActions(context: context);
+  late ToDoActions toDoAction = ToDoActions(context: context);
+
+  void addToDo() {
+    ToDo newTodo = ToDo(name: 'Buy Milk', description: 'Buy 4L of milk');
+    toDoAction.addToDo(newTodo);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ToDoState>(
+        builder: ((context, toDos, child) => CupertinoTabScaffold(
+              tabBar: CupertinoTabBar(items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.add), label: 'Tab 1'),
+                BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.add), label: 'Tab 1')
+              ]),
+              tabBuilder: (BuildContext context, int index) {
+                return CupertinoTabView(builder: (BuildContext context) {
+                  return const Center(
+                    child: Text('Content'),
+                  );
+                });
+              },
+              // appBar: AppBar(
+              //   title: Text(widget.title),
+              // ),
+              // child: Center(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       Expanded(
+              //           child: Center(
+              //         child: ListView.builder(
+              //           itemCount: toDos.toDoList.length,
+              //           itemBuilder: ((context, index) => Row(
+              //                 children: [
+              //                   Expanded(
+              //                     child: Text(
+              //                       'title: ${toDos.toDoList[index].name} | description: ${toDos.toDoList[index].description}',
+              //                       overflow: TextOverflow.ellipsis,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               )),
+              //         ),
+              //       )),
+              //     ],
+              //   ),
+              // ),
+              // floatingActionButton: FloatingActionButton(
+              //   onPressed: addToDo,
+              //   tooltip: 'Increment',
+              //   child: const Icon(Icons.add),
+              // ),
+            )));
+  }
+}
