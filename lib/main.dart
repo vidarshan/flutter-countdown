@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             switch (settings.name) {
               case '/':
                 return CupertinoPageRoute(
-                    builder: (_) => const ToDoListScreen(), settings: settings);
+                    builder: (_) => ToDoListScreen(), settings: settings);
               case '/add':
                 return CupertinoPageRoute(
                     builder: (_) => AddToDoScreen(), settings: settings);
@@ -44,7 +44,7 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _tabs = [AddToDoScreen(), const SettingTab()];
+  final List<Widget> _tabs = [const ToDoListScreen(), const SettingTab()];
   late ToDoActions toDoActions = ToDoActions(context: context);
 
   void addToDo() {
@@ -56,6 +56,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
     return Consumer<ToDoState>(
       builder: ((context, toDos, child) => CupertinoPageScaffold(
+              child: CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
               middle: const Text('ToDos'),
               trailing: CupertinoButton(
@@ -84,7 +85,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 tabBuilder: (BuildContext context, index) {
                   return _tabs[index];
                 }),
-          )),
+          ))),
     );
   }
 }
