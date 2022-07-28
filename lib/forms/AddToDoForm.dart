@@ -23,8 +23,9 @@ class _AddToDoFormState extends State<AddToDoForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(children: <Widget>[
-        CupertinoTextFormFieldRow(
+      child: Column(
+          children: List<Widget>.generate(5, (int index) {
+        return CupertinoTextFormFieldRow(
           prefix: const Text('Enter text'),
           placeholder: 'Enter text',
           validator: (String? value) {
@@ -33,10 +34,8 @@ class _AddToDoFormState extends State<AddToDoForm> {
             }
             return null;
           },
-        ),
-        CupertinoButton.filled(
-            onPressed: addToDo, child: const Text('Add Todo'))
-      ]),
+        );
+      })),
     );
   }
 }

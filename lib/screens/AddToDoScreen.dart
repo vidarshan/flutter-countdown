@@ -12,6 +12,8 @@ class AddToDoScreen extends StatefulWidget {
 class _AddToDoScreenState extends State<AddToDoScreen> {
   final myController = TextEditingController();
   late ToDoActions toDoActions = ToDoActions(context: context);
+  String toDoName = '';
+  String toDoDescription = '';
 
   @override
   void initState() {
@@ -26,12 +28,20 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   }
 
   void addToDo() {
-    ToDo newTodo = ToDo(name: 'Buy Milk', description: 'Buy 4L of milk');
+    ToDo newTodo = ToDo(name: toDoName, description: toDoDescription);
     toDoActions.addToDo(newTodo);
   }
 
   void _printLatestValue() {
     print('Second text field: ${myController.text}');
+  }
+
+  void setAddToDoFormFieldValues(field, value) {
+    if (field == 'name') {
+      toDoName = value;
+    } else {
+      toDoDescription = value;
+    }
   }
 
   @override
@@ -45,26 +55,23 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Row(
-              //   children: const [
-              //     Text(
-              //       'Title',
-              //       textAlign: TextAlign.left,
-              //     )
-              //   ],
-              // ),
-              const SizedBox(
+              SizedBox(
                 height: 40,
                 child: CupertinoTextField(
                   placeholder: 'Todo Title',
+                  textInputAction: TextInputAction.next,
+                  clearButtonMode: OverlayVisibilityMode.editing,
+                  onChanged: (value) => {toDoName = value},
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
                 child: SizedBox(
                   height: 40,
                   child: CupertinoTextField(
                     placeholder: 'Todo Description',
+                    clearButtonMode: OverlayVisibilityMode.editing,
+                    onChanged: (value) => {toDoDescription = value},
                   ),
                 ),
               ),
