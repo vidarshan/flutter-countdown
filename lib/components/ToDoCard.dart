@@ -26,6 +26,7 @@ class ToDoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: () => print('object'),
       onTap: () => Navigator.push(
           context,
           CupertinoPageRoute(

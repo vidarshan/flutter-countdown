@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/todo/actions.dart';
 
@@ -18,7 +19,6 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   @override
   void initState() {
     super.initState();
-    myController.addListener(_printLatestValue);
   }
 
   @override
@@ -31,10 +31,6 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
     ToDo newTodo = ToDo(name: toDoName, description: toDoDescription);
     toDoActions.addToDo(newTodo);
     Navigator.pop(context);
-  }
-
-  void _printLatestValue() {
-    print('Second text field: ${myController.text}');
   }
 
   void setAddToDoFormFieldValues(field, value) {
