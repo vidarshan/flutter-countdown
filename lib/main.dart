@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:to_dos/components/ToDoCard.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
@@ -26,10 +27,15 @@ class MyApp extends StatelessWidget {
             switch (settings.name) {
               case '/':
                 return CupertinoPageRoute(
-                    builder: (_) => ToDoListScreen(), settings: settings);
+                    builder: (_) => const ToDoListScreen(), settings: settings);
               case '/add':
                 return CupertinoPageRoute(
-                    builder: (_) => AddToDoScreen(), settings: settings);
+                    builder: (_) => const AddToDoScreen(), settings: settings);
+              case '/info':
+                return CupertinoPageRoute(
+                    builder: (_) =>
+                        const ToDoInfoScreen(id: 0, title: '', description: ''),
+                    settings: settings);
             }
           },
         ));

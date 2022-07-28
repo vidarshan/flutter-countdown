@@ -30,6 +30,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   void addToDo() {
     ToDo newTodo = ToDo(name: toDoName, description: toDoDescription);
     toDoActions.addToDo(newTodo);
+    Navigator.pop(context);
   }
 
   void _printLatestValue() {
@@ -70,7 +71,6 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                   height: 40,
                   child: CupertinoTextField(
                     placeholder: 'Todo Description',
-                    clearButtonMode: OverlayVisibilityMode.editing,
                     onChanged: (value) => {toDoDescription = value},
                   ),
                 ),
