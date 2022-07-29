@@ -28,8 +28,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   }
 
   void addToDo() {
-    ToDo newTodo = ToDo(name: toDoName, description: toDoDescription);
-    toDoActions.addToDo(newTodo);
+    toDoActions.addToDo(toDoName, toDoDescription);
     Navigator.pop(context);
   }
 

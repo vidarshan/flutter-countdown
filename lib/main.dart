@@ -53,11 +53,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [const ToDoListScreen(), const SettingTab()];
   late ToDoActions toDoActions = ToDoActions(context: context);
 
-  void addToDo() {
-    ToDo newTodo = ToDo(name: 'Buy Milk', description: 'Buy 4L of milk');
-    toDoActions.addToDo(newTodo);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ToDoState>(
