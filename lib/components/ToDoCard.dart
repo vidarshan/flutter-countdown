@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
@@ -48,7 +49,7 @@ class ToDoCard extends StatelessWidget {
                           Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
                               .withOpacity(1.0),
                       width: 5))),
-          height: 50,
+          height: 70,
           child: Row(
             children: [
               Row(
@@ -61,6 +62,12 @@ class ToDoCard extends StatelessWidget {
                       Text(
                         description,
                         style: const TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        DateFormat('yyyy-MM-dd kk:mm').format(createdAt),
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 63, 139, 239)),
                       ),
                     ],
                   )

@@ -39,7 +39,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
   @override
   Widget build(BuildContext context) {
     String formattedDate =
-        DateFormat('yyyy-MM-dd - kk:mm').format(widget.createdAt);
+        DateFormat('yyyy-MM-dd kk:mm').format(widget.createdAt);
 
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(middle: Text(widget.title)),
