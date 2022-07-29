@@ -6,17 +6,19 @@ import 'dart:math' as math;
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 
 class ToDoCard extends StatelessWidget {
-  final int index;
+  final String id;
   final String title;
   final String description;
+  final DateTime createdAt;
 
   final List<Color> circleColors = [Colors.red, Colors.blue, Colors.green];
 
   ToDoCard(
       {Key? key,
-      required this.index,
+      required this.id,
       required this.title,
-      required this.description})
+      required this.description,
+      required this.createdAt})
       : super(key: key);
 
   Color randomGenerator() {
@@ -31,9 +33,10 @@ class ToDoCard extends StatelessWidget {
           context,
           CupertinoPageRoute(
               builder: (context) => ToDoInfoScreen(
-                    id: index,
+                    id: id,
                     title: title,
                     description: description,
+                    createdAt: createdAt,
                   ))),
       child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 10),

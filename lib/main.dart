@@ -33,8 +33,12 @@ class MyApp extends StatelessWidget {
                     builder: (_) => const AddToDoScreen(), settings: settings);
               case '/info':
                 return CupertinoPageRoute(
-                    builder: (_) =>
-                        const ToDoInfoScreen(id: 0, title: '', description: ''),
+                    builder: (_) => ToDoInfoScreen(
+                          id: '',
+                          title: '',
+                          description: '',
+                          createdAt: DateTime.now(),
+                        ),
                     settings: settings);
             }
           },

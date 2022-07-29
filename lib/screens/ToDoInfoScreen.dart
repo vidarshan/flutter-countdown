@@ -1,16 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:intl/intl.dart';
+
 class ToDoInfoScreen extends StatefulWidget {
+  final String id;
   final String title;
   final String description;
-  final int id;
+  final DateTime createdAt;
 
   const ToDoInfoScreen(
       {Key? key,
       required this.id,
       required this.title,
-      required this.description})
+      required this.description,
+      required this.createdAt})
       : super(key: key);
 
   @override
@@ -34,6 +38,9 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('yyyy-MM-dd - kk:mm').format(widget.createdAt);
+
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(middle: Text(widget.title)),
         child: Container(
@@ -42,6 +49,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text(widget.title),
                 SizedBox(
                   height: 40,
                   child: CupertinoTextField(
@@ -52,6 +60,8 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                     onChanged: (value) => {print(value)},
                   ),
                 ),
+                Text(widget.id),
+                Text(formattedDate),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: SizedBox(

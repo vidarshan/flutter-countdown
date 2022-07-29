@@ -21,10 +21,12 @@ class ToDoListScreen extends StatelessWidget {
                                     children: [
                                       Expanded(
                                           child: ToDoCard(
-                                        index: index,
+                                        id: toDos.toDoList[index].id,
                                         title: toDos.toDoList[index].name,
                                         description:
                                             toDos.toDoList[index].description,
+                                        createdAt:
+                                            toDos.toDoList[index].createdAt,
                                       ))
                                     ],
                                   )))),
