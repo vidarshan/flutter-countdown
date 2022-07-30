@@ -66,7 +66,6 @@ class ToDoCard extends StatelessWidget {
                       Text(
                         DateFormat('yyyy-MM-dd kk:mm').format(createdAt),
                         style: const TextStyle(
-                            fontSize: 14,
                             color: Color.fromARGB(255, 63, 139, 239)),
                       ),
                     ],

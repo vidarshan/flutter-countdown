@@ -16,23 +16,24 @@ class ToDoActions {
     toDos = Provider.of(context, listen: false);
   }
 
+  Future<List<ToDo>> readFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.getString('toDoList');
+    var encodedToDoList = prefs.getString('toDoList');
+    print(encodedToDoList);
+    return [
+      ToDo(
+          id: '1',
+          name: 'name',
+          description: 'description',
+          createdAt: DateTime.now())
+    ];
+  }
+
   Future<void> addToSharedPreferences(List<ToDo> tList) async {
     final prefs = await SharedPreferences.getInstance();
     var encodedToDoList = ToDo.encode(toDos.toDoList);
     prefs.setString('toDoList', encodedToDoList);
-  }
-
-  Future<void> readFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.getString('toDoList');
-    var encodedToDoList = prefs.getString('toDoList');
-    print('Decoded todolist $encodedToDoList');
-    if (encodedToDoList == null) {
-      print('null');
-    } else {
-      var decodedToDoList = ToDo.decode(encodedToDoList);
-      print('Decoded todolist $decodedToDoList');
-    }
   }
 
   void addToDo(title, description) {
@@ -43,7 +44,6 @@ class ToDoActions {
         createdAt: DateTime.now());
     toDos.toDoList.add(newToDo);
     addToSharedPreferences(toDos.toDoList);
-    readFromSharedPreferences();
     toDos.update();
   }
 }

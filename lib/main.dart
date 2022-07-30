@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:to_dos/components/ToDoCard.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/SpashScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
 import 'package:to_dos/state/todo/actions.dart';
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
               case '/':
+                return CupertinoPageRoute(
+                    builder: (_) => SpashScreen(), settings: settings);
+              case '/home':
                 return CupertinoPageRoute(
                     builder: (_) => const ToDoListScreen(), settings: settings);
               case '/add':
@@ -56,6 +60,10 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [const ToDoListScreen(), const SettingTab()];
   late ToDoActions toDoActions = ToDoActions(context: context);
+
+  void readToDos() {
+    toDoActions.readFromSharedPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +108,14 @@ class SettingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CupertinoButton(onPressed: null, child: Text('Press')),
+    late ToDoActions toDoActions = ToDoActions(context: context);
+
+    void readToDos() async {
+      toDoActions.readFromSharedPreferences();
+    }
+
+    return Center(
+      child: CupertinoButton(onPressed: readToDos, child: const Text('Press')),
     );
   }
 }
