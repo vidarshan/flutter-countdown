@@ -20,10 +20,14 @@ class ToDoActions {
     final prefs = await SharedPreferences.getInstance();
     prefs.getString('toDoList');
     var encodedToDoList = prefs.getString('toDoList');
-    var decodedToDoList = ToDo.decode(encodedToDoList!);
-    toDos.toDoList = decodedToDoList!;
+    if (encodedToDoList == null) {
+      toDos.toDoList = [];
+    } else {
+      var decodedToDoList = ToDo.decode(encodedToDoList);
+      toDos.toDoList = decodedToDoList!;
+    }
+
     toDos.update();
-    print('reached $decodedToDoList');
   }
 
   Future<List<ToDo>?> readFromSharedPreferencesF() async {
