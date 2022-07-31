@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_dos/components/ToDoCard.dart';
-import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
 import 'package:to_dos/screens/SpashScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
@@ -26,12 +23,12 @@ class MyApp extends StatelessWidget {
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
-              case '/':
-                return CupertinoPageRoute(
-                    builder: (_) => SpashScreen(), settings: settings);
+              // case '/':
+              //   return CupertinoPageRoute(
+              //       builder: (_) => SpashScreen(), settings: settings);
               case '/home':
                 return CupertinoPageRoute(
-                    builder: (_) => const ToDoListScreen(), settings: settings);
+                    builder: (_) => ToDoListScreen(), settings: settings);
               case '/add':
                 return CupertinoPageRoute(
                     builder: (_) => const AddToDoScreen(), settings: settings);
@@ -58,12 +55,8 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _tabs = [const ToDoListScreen(), const SettingTab()];
+  final List<Widget> _tabs = [ToDoListScreen(), SettingsTab()];
   late ToDoActions toDoActions = ToDoActions(context: context);
-
-  void readToDos() {
-    toDoActions.readFromSharedPreferences();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +82,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         label: 'Home'),
                     BottomNavigationBarItem(
                         icon: Icon(
+                          CupertinoIcons.bell,
+                          size: 24,
+                        ),
+                        label: 'Notifications'),
+                    BottomNavigationBarItem(
+                        icon: Icon(
                           CupertinoIcons.settings,
                           size: 24,
                         ),
-                        label: 'Settings')
+                        label: 'Settings'),
                   ],
                 ),
                 tabBuilder: (BuildContext context, index) {
@@ -103,19 +102,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class SettingTab extends StatelessWidget {
-  const SettingTab({Key? key}) : super(key: key);
+class SettingsTab extends StatefulWidget {
+  SettingsTab({Key? key}) : super(key: key);
 
   @override
+  State<SettingsTab> createState() => _SettingsTabState();
+}
+
+class _SettingsTabState extends State<SettingsTab> {
+  @override
   Widget build(BuildContext context) {
-    late ToDoActions toDoActions = ToDoActions(context: context);
-
-    void readToDos() async {
-      toDoActions.readFromSharedPreferences();
-    }
-
-    return Center(
-      child: CupertinoButton(onPressed: readToDos, child: const Text('Press')),
+    return const Center(
+      child: CupertinoButton(onPressed: null, child: Text('Predsds')),
     );
   }
 }

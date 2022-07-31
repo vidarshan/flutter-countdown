@@ -1,0 +1,36 @@
+ return FutureBuilder(
+      future: rd.readFromSharedPreferencesF(),
+      builder: (BuildContext context, AsyncSnapshot<List<ToDo>> snapshot) {
+        // AsyncSnapshot<Your object type>
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: Text('Please wait its loading...'));
+        } else {
+          if (!snapshot.hasData) {
+            return const Center(child: Text('No Data'));
+          } else {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Center(
+                        child: ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: ((context, index) => Row(
+                                  children: [
+                                    Expanded(
+                                        child: ToDoCard(
+                                      id: snapshot.data![index].id,
+                                      title: snapshot.data![index].name,
+                                      description:
+                                          snapshot.data![index].description,
+                                      createdAt:
+                                          snapshot.data![index].createdAt,
+                                    ))
+                                  ],
+                                )))),
+                  )
+                ]);
+          } // snapshot.data  :- get your object which is pass from your downloadData() function
+        }
+      },
+    );
