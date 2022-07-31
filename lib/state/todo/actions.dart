@@ -30,15 +30,6 @@ class ToDoActions {
     toDos.update();
   }
 
-  Future<List<ToDo>?> readFromSharedPreferencesF() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.getString('toDoList');
-    var encodedToDoList = prefs.getString('toDoList');
-    var decodedToDoList = ToDo.decode(encodedToDoList!);
-    toDos.update();
-    return decodedToDoList;
-  }
-
   Future<void> addToSharedPreferences(List<ToDo> tList) async {
     final prefs = await SharedPreferences.getInstance();
     var encodedToDoList = ToDo.encode(toDos.toDoList);
@@ -57,6 +48,27 @@ class ToDoActions {
         createdAt: DateTime.now());
     toDos.toDoList.add(newToDo);
     addToSharedPreferences(toDos.toDoList);
+    toDos.update();
+  }
+
+  void setEditToDoItem(id, title, description, createdAt) {
+    toDos.editListItem.id = id;
+    toDos.editListItem.name = title;
+    toDos.editListItem.description = description;
+    toDos.editListItem.createdAt = createdAt;
+  }
+
+  void editToDo(id) {
+    var currentToDoList = toDos.toDoList;
+    var search = currentToDoList.indexWhere((element) => element.id == id);
+    currentToDoList[search] = toDos.editListItem;
+    toDos.update();
+  }
+
+  void deleteToDo(id) {
+    var currentToDoList = toDos.toDoList;
+    var search = currentToDoList.indexWhere((element) => element.id == id);
+    currentToDoList.removeAt(search);
     toDos.update();
   }
 }

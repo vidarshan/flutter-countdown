@@ -44,8 +44,9 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar:
-          const CupertinoNavigationBar(middle: Text('Create new Todo')),
+      navigationBar: const CupertinoNavigationBar(
+        previousPageTitle: 'ToDos',
+      ),
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
