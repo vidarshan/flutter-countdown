@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/SearchToDoScreen.dart';
 import 'package:to_dos/screens/SpashScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
@@ -23,9 +24,6 @@ class MyApp extends StatelessWidget {
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
-              // case '/':
-              //   return CupertinoPageRoute(
-              //       builder: (_) => SpashScreen(), settings: settings);
               case '/home':
                 return CupertinoPageRoute(
                     builder: (_) => ToDoListScreen(), settings: settings);
@@ -57,6 +55,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [ToDoListScreen(), SettingsTab()];
   late ToDoActions toDoActions = ToDoActions(context: context);
+  ToDoState toDoState = ToDoState();
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +63,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: ((context, toDos, child) => CupertinoPageScaffold(
               child: CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-              middle: const Text('ToDos'),
               trailing: CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () => Navigator.pushNamed(context, '/add'),
                 child: const Icon(CupertinoIcons.add),
               ),
+              middle: const Text('ToDos'),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(

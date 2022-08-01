@@ -10,10 +10,12 @@ import 'package:uuid/uuid.dart';
 class ToDoActions {
   final BuildContext context;
   late ToDoState toDos;
+  late ToDoState toDoTemp;
   var uuid = const Uuid();
 
   ToDoActions({required this.context}) {
     toDos = Provider.of(context, listen: false);
+    toDoTemp = toDos;
   }
 
   void readFromSharedPreferences() async {
@@ -69,6 +71,27 @@ class ToDoActions {
     var currentToDoList = toDos.toDoList;
     var search = currentToDoList.indexWhere((element) => element.id == id);
     currentToDoList.removeAt(search);
+    toDos.update();
+  }
+
+  void searchToDos(keyword) {
+    toDos.search = keyword;
+    var currentToDoList = toDos.toDoList;
+    late List<ToDo> searchList = [];
+    if (keyword == '') {
+      readFromSharedPreferences();
+    } else {
+      for (var element in currentToDoList) {
+        {
+          if (element.name.contains(keyword)) {
+            print(element.name);
+            searchList.add(element);
+          }
+        }
+      }
+    }
+
+    toDos.toDoList = searchList;
     toDos.update();
   }
 }

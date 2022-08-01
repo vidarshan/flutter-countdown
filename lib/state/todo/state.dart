@@ -5,6 +5,7 @@ class ToDoState with ChangeNotifier {
   late List<ToDo> toDoList = [];
   late ToDo editListItem =
       ToDo(id: '', name: '', description: '', createdAt: DateTime.now());
+  var search = '';
 
   void update() {
     notifyListeners();

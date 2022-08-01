@@ -58,14 +58,18 @@ class ToDoCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text((title), style: const TextStyle(fontSize: 20)),
+                      Text((title.toUpperCase()),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500)),
                       Text(
                         description,
-                        style: const TextStyle(color: Colors.grey),
+                        style: const TextStyle(
+                            color: Color.fromRGBO(158, 158, 158, 1)),
                       ),
                       Text(
                         DateFormat('yyyy-MM-dd kk:mm').format(createdAt),
                         style: const TextStyle(
+                          fontSize: 14,
                           color: Color.fromARGB(255, 63, 139, 239),
                         ),
                       ),
