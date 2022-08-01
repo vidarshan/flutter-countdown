@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
 import 'package:to_dos/screens/SearchToDoScreen.dart';
-import 'package:to_dos/screens/SpashScreen.dart';
+import 'package:to_dos/screens/SettingsScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
+import 'package:to_dos/screens/ToDoNotificationsScreen.dart';
+import 'package:to_dos/screens/authentication/LogInScreen.dart';
+import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
-              case '/home':
+              case '/':
                 return CupertinoPageRoute(
                     builder: (_) => ToDoListScreen(), settings: settings);
               case '/add':
@@ -39,6 +42,12 @@ class MyApp extends StatelessWidget {
                           createdAt: DateTime.now(),
                         ),
                     settings: settings);
+              case '/signup':
+                return CupertinoPageRoute(
+                    builder: (_) => SignUpScreen(), settings: settings);
+              case '/login':
+                return CupertinoPageRoute(
+                    builder: (_) => LogInScreen(), settings: settings);
             }
           },
         ));
@@ -53,7 +62,11 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _tabs = [ToDoListScreen(), SettingsTab()];
+  final List<Widget> _tabs = [
+    ToDoListScreen(),
+    ToDoNotificationsScreen(),
+    SettingsTab()
+  ];
   late ToDoActions toDoActions = ToDoActions(context: context);
   ToDoState toDoState = ToDoState();
 
@@ -111,8 +124,10 @@ class SettingsTab extends StatefulWidget {
 class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CupertinoButton(onPressed: null, child: Text('Predsds')),
+    return Center(
+      child: CupertinoButton(
+          onPressed: () => Navigator.pushNamed(context, '/signup'),
+          child: Text('Predsds')),
     );
   }
 }
