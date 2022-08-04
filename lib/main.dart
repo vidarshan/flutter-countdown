@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
 import 'package:to_dos/screens/SearchToDoScreen.dart';
@@ -77,6 +78,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: ((context, toDos, child) => CupertinoPageScaffold(
               child: CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
+              backgroundColor: Colors.white,
               trailing: CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () => Navigator.pushNamed(context, '/add'),
@@ -86,6 +88,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
+                  backgroundColor: Colors.white,
                   items: const [
                     BottomNavigationBarItem(
                         icon: Icon(
