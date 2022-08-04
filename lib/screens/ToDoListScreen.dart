@@ -37,7 +37,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 20, bottom: 20),
               child: CupertinoSearchTextField(
-                  placeholder: 'Search Todos',
+                  placeholder: 'Search ToDos',
                   onChanged: ((value) => searchToDos(value))),
             ),
             Expanded(
