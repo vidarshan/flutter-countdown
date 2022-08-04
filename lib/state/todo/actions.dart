@@ -24,7 +24,7 @@ class ToDoActions {
       toDos.toDoList = [];
     } else {
       var decodedToDoList = ToDo.decode(encodedToDoList);
-      toDos.toDoList = decodedToDoList!.reversed.toList();
+      toDos.toDoList = decodedToDoList!;
     }
 
     toDos.update();
@@ -47,7 +47,7 @@ class ToDoActions {
         description: description,
         createdAt: DateTime.now());
     toDos.toDoList.add(newToDo);
-    addToSharedPreferences(toDos.toDoList);
+    addToSharedPreferences(toDos.toDoList.reversed.toList());
     toDos.update();
   }
 
@@ -62,6 +62,7 @@ class ToDoActions {
     var currentToDoList = toDos.toDoList;
     var search = currentToDoList.indexWhere((element) => element.id == id);
     currentToDoList[search] = toDos.editListItem;
+    addToSharedPreferences(currentToDoList.reversed.toList());
     toDos.update();
   }
 
@@ -69,6 +70,7 @@ class ToDoActions {
     var currentToDoList = toDos.toDoList;
     var search = currentToDoList.indexWhere((element) => element.id == id);
     currentToDoList.removeAt(search);
+    addToSharedPreferences(currentToDoList.reversed.toList());
     toDos.update();
   }
 
