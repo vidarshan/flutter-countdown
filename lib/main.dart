@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => UserState()),
         ],
         child: CupertinoApp(
+          debugShowCheckedModeBanner: false,
           title: _title,
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
