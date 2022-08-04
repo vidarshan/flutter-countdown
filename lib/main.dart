@@ -10,6 +10,7 @@ import 'package:to_dos/screens/authentication/LogInScreen.dart';
 import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
+import 'package:to_dos/state/user/state.dart';
 
 void main() => runApp(const MyApp());
 
@@ -21,7 +22,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider(create: (context) => ToDoState())],
+        providers: [
+          ChangeNotifierProvider(create: (context) => ToDoState()),
+          ChangeNotifierProvider(create: (context) => UserState()),
+        ],
         child: CupertinoApp(
           title: _title,
           home: const MyStatefulWidget(),
@@ -62,11 +66,7 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _tabs = [
-    ToDoListScreen(),
-    ToDoNotificationsScreen(),
-    SettingsTab()
-  ];
+  final List<Widget> _tabs = [ToDoListScreen(), ToDoNotificationsScreen()];
   late ToDoActions toDoActions = ToDoActions(context: context);
   ToDoState toDoState = ToDoState();
 
@@ -98,12 +98,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           size: 24,
                         ),
                         label: 'Notifications'),
-                    BottomNavigationBarItem(
-                        icon: Icon(
-                          CupertinoIcons.settings,
-                          size: 24,
-                        ),
-                        label: 'Settings'),
                   ],
                 ),
                 tabBuilder: (BuildContext context, index) {

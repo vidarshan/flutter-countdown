@@ -29,7 +29,7 @@ class _LogInScreenState extends State<LogInScreen> {
           const Padding(
             padding: EdgeInsets.only(left: 16, right: 16, bottom: 28),
             child: CupertinoTextField(
-              placeholder: 'Your name',
+              placeholder: 'Your username',
             ),
           ),
           const Padding(

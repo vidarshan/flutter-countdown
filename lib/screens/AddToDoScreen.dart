@@ -11,7 +11,6 @@ class AddToDoScreen extends StatefulWidget {
 }
 
 class _AddToDoScreenState extends State<AddToDoScreen> {
-  final myController = TextEditingController();
   late ToDoActions toDoActions = ToDoActions(context: context);
   String toDoName = '';
   String toDoDescription = '';
@@ -19,12 +18,6 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    myController.dispose();
-    super.dispose();
   }
 
   void addToDo() {
