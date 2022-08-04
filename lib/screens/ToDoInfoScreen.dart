@@ -93,6 +93,16 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                     ),
                   ),
                 ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Text(
+                      'Created at ${DateFormat('yyyy-MM-dd - h:mm a').format(widget.createdAt)}',
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: SizedBox(

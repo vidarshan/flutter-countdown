@@ -24,7 +24,7 @@ class ToDoActions {
       toDos.toDoList = [];
     } else {
       var decodedToDoList = ToDo.decode(encodedToDoList);
-      toDos.toDoList = decodedToDoList!;
+      toDos.toDoList = decodedToDoList!.reversed.toList();
     }
 
     toDos.update();
@@ -89,7 +89,7 @@ class ToDoActions {
       }
     }
 
-    toDos.toDoList = searchList;
+    toDos.toDoList = searchList.reversed.toList();
     toDos.update();
   }
 }
