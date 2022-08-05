@@ -9,6 +9,7 @@ class ToDoInfoScreen extends StatefulWidget {
   final String id;
   final String title;
   final String description;
+  final bool completed;
   final DateTime createdAt;
 
   const ToDoInfoScreen(
@@ -16,6 +17,7 @@ class ToDoInfoScreen extends StatefulWidget {
       required this.id,
       required this.title,
       required this.description,
+      required this.completed,
       required this.createdAt})
       : super(key: key);
 
@@ -26,6 +28,8 @@ class ToDoInfoScreen extends StatefulWidget {
 class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  late bool _completed;
+
   late ToDoActions toDoActions = ToDoActions(context: context);
   ToDoState toDoState = ToDoState();
 
@@ -34,24 +38,29 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
     super.initState();
     _titleController.text = widget.title;
     _descriptionController.text = widget.description;
+    _completed = widget.completed;
     toDoState.editListItem.id = widget.id;
     toDoState.editListItem.name = widget.title;
     toDoState.editListItem.description = widget.description;
+    toDoState.editListItem.completed = widget.completed;
     toDoState.editListItem.createdAt = widget.createdAt;
   }
 
-  void editToDo(id, title, description) {
+  void editToDo(id, title, description, completed) {
     toDoActions.editToDo(id);
     Navigator.pop(context);
   }
 
   void onChange(field, value) {
     if (field == 'title') {
+      toDoActions.setEditToDoItem(widget.id, value, widget.description,
+          widget.completed, widget.createdAt);
+    } else if (field == 'description') {
       toDoActions.setEditToDoItem(
-          widget.id, value, widget.description, widget.createdAt);
+          widget.id, widget.title, value, widget.completed, widget.createdAt);
     } else {
       toDoActions.setEditToDoItem(
-          widget.id, widget.title, value, widget.createdAt);
+          widget.id, widget.title, widget.description, value, widget.createdAt);
     }
   }
 
@@ -93,6 +102,25 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Complete ToDo',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 189, 189, 189)),
+                      ),
+                      const Spacer(),
+                      CupertinoSwitch(
+                          value: _completed,
+                          onChanged: (value) => setState(() {
+                                _completed = value;
+                                onChange('completed', value);
+                              }))
+                    ],
+                  ),
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -108,8 +136,8 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                   child: SizedBox(
                     width: double.maxFinite,
                     child: CupertinoButton.filled(
-                        onPressed: () => editToDo(
-                            widget.id, widget.title, widget.description),
+                        onPressed: () => editToDo(widget.id, widget.title,
+                            widget.description, widget.completed),
                         child: const Text('Edit Todo')),
                   ),
                 ),

@@ -40,21 +40,23 @@ class ToDoActions {
     readFromSharedPreferences();
   }
 
-  void addToDo(title, description) {
+  void addToDo(title, description, completed) {
     ToDo newToDo = ToDo(
         id: uuid.v4(),
         name: title,
         description: description,
+        completed: completed,
         createdAt: DateTime.now());
     toDos.toDoList.add(newToDo);
     addToSharedPreferences(toDos.toDoList.reversed.toList());
     toDos.update();
   }
 
-  void setEditToDoItem(id, title, description, createdAt) {
+  void setEditToDoItem(id, title, description, completed, createdAt) {
     toDos.editListItem.id = id;
     toDos.editListItem.name = title;
     toDos.editListItem.description = description;
+    toDos.editListItem.completed = completed;
     toDos.editListItem.createdAt = createdAt;
   }
 
@@ -84,7 +86,6 @@ class ToDoActions {
       for (var element in currentToDoList) {
         {
           if (element.name.contains(keyword)) {
-            print(element.name);
             searchList.add(element);
           }
         }

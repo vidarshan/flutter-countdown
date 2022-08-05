@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
                           id: '',
                           title: '',
                           description: '',
+                          completed: false,
                           createdAt: DateTime.now(),
                         ),
                     settings: settings);

@@ -6,12 +6,14 @@ class ToDo {
   String id;
   String name;
   String description;
+  bool completed;
   DateTime createdAt;
 
   ToDo(
       {required this.id,
       required this.name,
       required this.description,
+      required this.completed,
       required this.createdAt});
 
   factory ToDo.fromJson(Map<String, dynamic> jsonData) {
@@ -19,6 +21,7 @@ class ToDo {
         id: jsonData['id'],
         name: jsonData['name'],
         description: jsonData['description'],
+        completed: jsonData['completed'] ?? false,
         createdAt: DateTime.parse(jsonData['createdAt']));
   }
 
@@ -26,6 +29,7 @@ class ToDo {
         'id': toDo.id,
         'name': toDo.name,
         'description': toDo.description,
+        'completed': toDo.completed,
         'createdAt': DateFormat('yyyy-MM-dd kk:mm').format(toDo.createdAt),
       };
 

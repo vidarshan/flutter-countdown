@@ -10,6 +10,7 @@ class ToDoCard extends StatelessWidget {
   final String id;
   final String title;
   final String description;
+  final bool completed;
   final DateTime createdAt;
 
   final List<Color> circleColors = [Colors.red, Colors.blue, Colors.green];
@@ -19,6 +20,7 @@ class ToDoCard extends StatelessWidget {
       required this.id,
       required this.title,
       required this.description,
+      required this.completed,
       required this.createdAt})
       : super(key: key);
 
@@ -37,6 +39,7 @@ class ToDoCard extends StatelessWidget {
                     id: id,
                     title: title,
                     description: description,
+                    completed: completed,
                     createdAt: createdAt,
                   ))),
       child: Container(

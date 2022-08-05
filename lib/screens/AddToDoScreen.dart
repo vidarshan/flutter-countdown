@@ -14,6 +14,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   late ToDoActions toDoActions = ToDoActions(context: context);
   String toDoName = '';
   String toDoDescription = '';
+  bool completed = false;
 
   @override
   void initState() {
@@ -21,7 +22,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   }
 
   void addToDo() {
-    toDoActions.addToDo(toDoName, toDoDescription);
+    toDoActions.addToDo(toDoName, toDoDescription, completed);
 
     Navigator.pop(context);
   }
@@ -33,6 +34,8 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
       toDoDescription = value;
     }
   }
+
+  void toggleComplete = () => {};
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,24 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                     placeholder: 'Todo Description',
                     onChanged: (value) => {toDoDescription = value},
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Complete ToDo',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 189, 189, 189)),
+                    ),
+                    const Spacer(),
+                    CupertinoSwitch(
+                        value: completed,
+                        onChanged: (value) => setState(() {
+                              completed = value;
+                            }))
+                  ],
                 ),
               ),
               Padding(

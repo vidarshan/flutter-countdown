@@ -64,6 +64,8 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                             title: toDos.toDoList[index].name,
                                             description: toDos
                                                 .toDoList[index].description,
+                                            completed:
+                                                toDos.toDoList[index].completed,
                                             createdAt:
                                                 toDos.toDoList[index].createdAt,
                                           )
