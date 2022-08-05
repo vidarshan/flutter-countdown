@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -90,17 +91,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
                   backgroundColor: Colors.white,
-                  items: const [
-                    BottomNavigationBarItem(
+                  items: [
+                    const BottomNavigationBarItem(
                         icon: Icon(
                           CupertinoIcons.list_dash,
                           size: 24,
                         ),
                         label: 'Home'),
                     BottomNavigationBarItem(
-                        icon: Icon(
-                          CupertinoIcons.bell,
-                          size: 24,
+                        icon: Badge(
+                          badgeColor: Colors.red,
+                          position: BadgePosition.topEnd(top: 0, end: -1),
+                          child: const Icon(
+                            CupertinoIcons.bell,
+                            size: 24,
+                          ),
                         ),
                         label: 'Notifications'),
                   ],

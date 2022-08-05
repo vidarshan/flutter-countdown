@@ -39,6 +39,7 @@ dependencies:
   random_color: ^1.0.5
   uuid: ^3.0.6
   intl: ^0.17.0
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:
