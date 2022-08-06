@@ -52,19 +52,15 @@ class ToDoActions {
     toDos.update();
   }
 
-  void setEditToDoItem(id, title, description, completed, createdAt) {
-    toDos.editListItem.id = id;
-    toDos.editListItem.name = title;
-    toDos.editListItem.description = description;
-    toDos.editListItem.completed = completed;
-    toDos.editListItem.createdAt = createdAt;
-  }
-
-  void editToDo(id) {
-    var currentToDoList = toDos.toDoList;
-    var search = currentToDoList.indexWhere((element) => element.id == id);
-    currentToDoList[search] = toDos.editListItem;
-    addToSharedPreferences(currentToDoList.reversed.toList());
+  void editToDo(id, title, description, completed, createdAt) {
+    var search = toDos.toDoList.indexWhere((element) => element.id == id);
+    toDos.toDoList[search].name = title;
+    toDos.toDoList[search].description = description;
+    toDos.toDoList[search].completed = completed;
+    if (toDos.toDoList[search].completed) {
+      toDos.notificationCount++;
+    }
+    addToSharedPreferences(toDos.toDoList);
     toDos.update();
   }
 

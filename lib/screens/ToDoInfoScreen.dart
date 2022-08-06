@@ -28,7 +28,10 @@ class ToDoInfoScreen extends StatefulWidget {
 class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
-  late bool _completed;
+  late bool completed;
+
+  late String title;
+  late String description;
 
   late ToDoActions toDoActions = ToDoActions(context: context);
   ToDoState toDoState = ToDoState();
@@ -38,31 +41,37 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
     super.initState();
     _titleController.text = widget.title;
     _descriptionController.text = widget.description;
-    _completed = widget.completed;
-    toDoState.editListItem.id = widget.id;
-    toDoState.editListItem.name = widget.title;
-    toDoState.editListItem.description = widget.description;
-    toDoState.editListItem.completed = widget.completed;
-    toDoState.editListItem.createdAt = widget.createdAt;
+    completed = widget.completed;
+
+    title = widget.title;
+    description = widget.description;
+
+    // toDoState.editListItem.id = widget.id;
+    // toDoState.editListItem.name = widget.title;
+    // toDoState.editListItem.description = widget.description;
+    // toDoState.editListItem.completed = widget.completed;
+    // toDoState.editListItem.createdAt = widget.createdAt;
   }
 
-  void editToDo(id, title, description, completed) {
-    toDoActions.editToDo(id);
+  void editToDo(id, title, description, completed, createdAt) {
+    print('wid ${id}');
+    print('id ${id}');
+    toDoActions.editToDo(id, title, description, completed, createdAt);
     Navigator.pop(context);
   }
 
-  void onChange(field, value) {
-    if (field == 'title') {
-      toDoActions.setEditToDoItem(widget.id, value, widget.description,
-          widget.completed, widget.createdAt);
-    } else if (field == 'description') {
-      toDoActions.setEditToDoItem(
-          widget.id, widget.title, value, widget.completed, widget.createdAt);
-    } else {
-      toDoActions.setEditToDoItem(
-          widget.id, widget.title, widget.description, value, widget.createdAt);
-    }
-  }
+  // void onChange(field, value) {
+  //   if (field == 'title') {
+  //     toDoActions.setEditToDoItem(widget.id, value, widget.description,
+  //         widget.completed, widget.createdAt);
+  //   } else if (field == 'description') {
+  //     toDoActions.setEditToDoItem(
+  //         widget.id, widget.title, value, widget.completed, widget.createdAt);
+  //   } else {
+  //     toDoActions.setEditToDoItem(
+  //         widget.id, widget.title, widget.description, value, widget.createdAt);
+  //   }
+  // }
 
   void deleteToDo(id) {
     toDoActions.deleteToDo(id);
@@ -88,7 +97,9 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                     placeholder: 'Todo Title',
                     controller: _titleController,
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => onChange('title', value),
+                    onChanged: (value) => setState(() {
+                      title = value;
+                    }),
                   ),
                 ),
                 Padding(
@@ -96,10 +107,11 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                   child: SizedBox(
                     height: 40,
                     child: CupertinoTextField(
-                      controller: _descriptionController,
-                      placeholder: 'Todo Description',
-                      onChanged: (value) => onChange('description', value),
-                    ),
+                        controller: _descriptionController,
+                        placeholder: 'Todo Description',
+                        onChanged: (value) => setState(() {
+                              description = value;
+                            })),
                   ),
                 ),
                 Padding(
@@ -113,10 +125,9 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                       ),
                       const Spacer(),
                       CupertinoSwitch(
-                          value: _completed,
+                          value: completed,
                           onChanged: (value) => setState(() {
-                                _completed = value;
-                                onChange('completed', value);
+                                completed = value;
                               }))
                     ],
                   ),
@@ -136,8 +147,8 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                   child: SizedBox(
                     width: double.maxFinite,
                     child: CupertinoButton.filled(
-                        onPressed: () => editToDo(widget.id, widget.title,
-                            widget.description, widget.completed),
+                        onPressed: () => editToDo(widget.id, title, description,
+                            completed, widget.createdAt),
                         child: const Text('Edit Todo')),
                   ),
                 ),

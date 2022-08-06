@@ -3,13 +3,8 @@ import 'package:to_dos/models/Todo.dart';
 
 class ToDoState with ChangeNotifier {
   late List<ToDo> toDoList = [];
-  late ToDo editListItem = ToDo(
-      id: '',
-      name: '',
-      description: '',
-      completed: false,
-      createdAt: DateTime.now());
   var search = '';
+  var notificationCount = 0;
 
   void update() {
     notifyListeners();

@@ -100,8 +100,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         label: 'Home'),
                     BottomNavigationBarItem(
                         icon: Badge(
+                          badgeContent: Text(
+                            toDos.notificationCount.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
                           badgeColor: Colors.red,
-                          position: BadgePosition.topEnd(top: 0, end: -1),
                           child: const Icon(
                             CupertinoIcons.bell,
                             size: 24,
@@ -129,9 +132,12 @@ class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     return Center(
+        child: CupertinoButton(
+      onPressed: () => Navigator.pushNamed(context, '/signup'),
       child: CupertinoButton(
-          onPressed: () => Navigator.pushNamed(context, '/signup'),
-          child: Text('Predsds')),
-    );
+        child: Text('dd'),
+        onPressed: () => print('dd'),
+      ),
+    ));
   }
 }
