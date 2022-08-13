@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
-import 'package:to_dos/screens/SearchToDoScreen.dart';
-import 'package:to_dos/screens/SettingsScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
 import 'package:to_dos/screens/ToDoNotificationsScreen.dart';
@@ -12,16 +10,14 @@ import 'package:to_dos/screens/authentication/LogInScreen.dart';
 import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
-import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:to_dos/state/user/state.dart';
+import 'package:to_dos/constants/globals.dart' as globals;
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
-
-  static const String _title = 'ToDos';
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -133,11 +129,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     ),
                     BottomNavigationBarItem(
                         icon: Badge(
+                          animationType: BadgeAnimationType.fade,
                           badgeContent: Text(
                             toDos.notificationCount.toString(),
                             style: const TextStyle(color: Colors.white),
                           ),
-                          badgeColor: Colors.red,
+                          badgeColor: globals.notificationBadgeColor,
                           child: const Icon(
                             CupertinoIcons.bell,
                             color: Colors.green,
