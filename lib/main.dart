@@ -10,27 +10,42 @@ import 'package:to_dos/screens/ToDoListScreen.dart';
 import 'package:to_dos/screens/ToDoNotificationsScreen.dart';
 import 'package:to_dos/screens/authentication/LogInScreen.dart';
 import 'package:to_dos/screens/authentication/SignUpScreen.dart';
+import 'package:to_dos/state/theme/actions.dart';
+import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:to_dos/state/user/state.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  MyApp({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
+  static const String _title = 'ToDos';
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeState themeState = ThemeState();
 
   @override
   Widget build(BuildContext context) {
+    print(themeState.currentTheme);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ToDoState()),
           ChangeNotifierProvider(create: (context) => UserState()),
+          ChangeNotifierProvider(
+            create: (context) => ThemeState(),
+          )
         ],
         child: CupertinoApp(
+          theme: themeState.currentTheme == 'dark'
+              ? const CupertinoThemeData(brightness: Brightness.dark)
+              : const CupertinoThemeData(brightness: Brightness.light),
           debugShowCheckedModeBanner: false,
-          title: _title,
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
@@ -70,34 +85,52 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final List<Widget> _tabs = [ToDoListScreen(), ToDoNotificationsScreen()];
-  late ToDoActions toDoActions = ToDoActions(context: context);
+  final List<Widget> _tabs = [
+    ToDoListScreen(),
+    ToDoNotificationsScreen(),
+    SettingsTab()
+  ];
+  late ThemeActions themeActions = ThemeActions(context: context);
   ToDoState toDoState = ToDoState();
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ToDoState>(
-      builder: ((context, toDos, child) => CupertinoPageScaffold(
+    return Consumer2<ToDoState, ThemeState>(
+      builder: ((context, toDos, theme, child) => CupertinoPageScaffold(
               child: CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-              backgroundColor: Colors.white,
+              backgroundColor:
+                  theme.currentTheme == 'dark' ? Colors.black : Colors.white,
               trailing: CupertinoButton(
                 padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pushNamed(context, '/add'),
-                child: const Icon(CupertinoIcons.add),
+                // onPressed: () => Navigator.pushNamed(context, '/add'),
+                onPressed: () => themeActions
+                    .setTheme(theme.currentTheme == 'dark' ? 'light' : 'dark'),
+                child: const Icon(
+                  CupertinoIcons.add,
+                  color: Colors.green,
+                ),
               ),
-              middle: const Text('ToDos'),
+              middle: const Text(
+                'ToDos',
+                style: TextStyle(color: Colors.green),
+              ),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
-                  backgroundColor: Colors.white,
+                  activeColor: Colors.green,
+                  backgroundColor: theme.currentTheme == 'dark'
+                      ? Colors.black
+                      : Colors.white,
                   items: [
                     const BottomNavigationBarItem(
-                        icon: Icon(
-                          CupertinoIcons.list_dash,
-                          size: 24,
-                        ),
-                        label: 'Home'),
+                      icon: Icon(
+                        CupertinoIcons.list_dash,
+                        size: 24,
+                        color: Colors.green,
+                      ),
+                      label: 'Home',
+                    ),
                     BottomNavigationBarItem(
                         icon: Badge(
                           badgeContent: Text(
@@ -107,10 +140,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           badgeColor: Colors.red,
                           child: const Icon(
                             CupertinoIcons.bell,
+                            color: Colors.green,
                             size: 24,
                           ),
                         ),
                         label: 'Notifications'),
+                    const BottomNavigationBarItem(
+                        icon: Icon(
+                          CupertinoIcons.settings,
+                          color: Colors.green,
+                          size: 24,
+                        ),
+                        label: 'Settings')
                   ],
                 ),
                 tabBuilder: (BuildContext context, index) {
@@ -129,15 +170,24 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> {
+  late ThemeActions themeActions = ThemeActions(context: context);
+  ThemeState themeState = ThemeState();
+  bool themeIsDark = false;
+
+  @override
+  void initState() {
+    super.initState();
+    themeIsDark = false;
+  }
+
+  Function changeTheme = (value) {
+    print(value);
+  };
+
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: CupertinoButton(
-      onPressed: () => Navigator.pushNamed(context, '/signup'),
-      child: CupertinoButton(
-        child: Text('dd'),
-        onPressed: () => print('dd'),
-      ),
-    ));
+        child: CupertinoSwitch(
+            value: themeIsDark, onChanged: (value) => changeTheme(value)));
   }
 }
