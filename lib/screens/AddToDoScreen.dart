@@ -54,57 +54,115 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
               previousPageTitle: 'ToDos',
             ),
             child: Container(
-              margin: const EdgeInsets.only(left: 20, right: 20),
+              color: theme.currentTheme == 'dark'
+                  ? globals.greyDarkBackgroundColor
+                  : globals.greyLightBackgroundColor,
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      child: CupertinoTextField(
-                        placeholder: 'Todo Title',
-                        textInputAction: TextInputAction.next,
-                        clearButtonMode: OverlayVisibilityMode.editing,
-                        onChanged: (value) => {toDoName = value},
+                children: [
+                  CupertinoFormSection.insetGrouped(
+                      decoration: BoxDecoration(
+                          color: theme.currentTheme == 'dark'
+                              ? globals.darkThemeColor
+                              : globals.lightThemeColor,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      backgroundColor: theme.currentTheme == 'dark'
+                          ? globals.greyDarkBackgroundColor
+                          : globals.greyLightBackgroundColor,
+                      header: Text(
+                        'ToDo Info'.toUpperCase(),
+                        style: TextStyle(
+                            color: theme.currentTheme == 'dark'
+                                ? globals.darkThemeTextColor
+                                : globals.lightThemeTextColor),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: SizedBox(
-                        height: 40,
-                        child: CupertinoTextField(
-                          placeholder: 'Todo Description',
+                      children: [
+                        CupertinoTextFormFieldRow(
+                          // style: TextStyle(color: ),
+                          placeholderStyle: TextStyle(
+                              color: theme.currentTheme == 'dark'
+                                  ? globals.darkPlaceHolderColor
+                                  : globals.lightPlaceHolderColor),
+                          prefix: Text(
+                            'Title',
+                            style: TextStyle(
+                                color: theme.currentTheme == 'dark'
+                                    ? globals.darkThemeTextColor
+                                    : globals.lightThemeTextColor),
+                          ),
+                          placeholder: 'Enter Title',
                           onChanged: (value) => {toDoDescription = value},
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          const Text(
-                            'Complete ToDo',
+                        CupertinoTextFormFieldRow(
+                          placeholderStyle: TextStyle(
+                              color: theme.currentTheme == 'dark'
+                                  ? globals.darkPlaceHolderColor
+                                  : globals.lightPlaceHolderColor),
+                          prefix: Text(
+                            'Description',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 189, 189, 189)),
+                                color: theme.currentTheme == 'dark'
+                                    ? globals.darkThemeTextColor
+                                    : globals.lightThemeTextColor),
                           ),
-                          const Spacer(),
-                          CupertinoSwitch(
-                              value: completed,
-                              onChanged: (value) => setState(() {
-                                    completed = value;
-                                  }))
-                        ],
+                          placeholder: 'Enter Description',
+                          onChanged: (value) => {toDoDescription = value},
+                        ),
+                      ]),
+                  CupertinoFormSection.insetGrouped(
+                      decoration: BoxDecoration(
+                          color: theme.currentTheme == 'dark'
+                              ? globals.darkThemeColor
+                              : globals.lightThemeColor,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      backgroundColor: theme.currentTheme == 'dark'
+                          ? globals.greyDarkBackgroundColor
+                          : globals.greyLightBackgroundColor,
+                      header: Text(
+                        'ToDo Status'.toUpperCase(),
+                        style: TextStyle(
+                            color: theme.currentTheme == 'dark'
+                                ? globals.darkThemeTextColor
+                                : globals.lightThemeTextColor),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: SizedBox(
-                        width: double.maxFinite,
-                        child: CupertinoButton.filled(
-                            onPressed: addToDo, child: const Text('Add Todo')),
-                      ),
-                    )
-                  ]),
+                      children: [
+                        CupertinoFormRow(
+                            prefix: Text(
+                              'Complete ToDo',
+                              style: TextStyle(
+                                  color: theme.currentTheme == 'dark'
+                                      ? globals.darkThemeTextColor
+                                      : globals.lightThemeTextColor),
+                            ),
+                            child: CupertinoSwitch(
+                                value: completed,
+                                onChanged: (value) => setState(() {
+                                      completed = value;
+                                    }))),
+                      ]),
+                  CupertinoFormSection.insetGrouped(
+                    backgroundColor: theme.currentTheme == 'dark'
+                        ? globals.greyDarkBackgroundColor
+                        : globals.greyLightBackgroundColor,
+                    children: [
+                      Container(
+                        color: theme.currentTheme == 'dark'
+                            ? globals.greyDarkBackgroundColor
+                            : globals.greyLightBackgroundColor,
+                        padding: const EdgeInsets.only(top: 20),
+                        child: SizedBox(
+                          width: double.maxFinite,
+                          child: CupertinoButton(
+                              color: globals.appAccentColor,
+                              onPressed: addToDo,
+                              child: const Text('Add Todo')),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           )),
     );

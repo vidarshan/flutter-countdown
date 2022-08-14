@@ -13,3 +13,5 @@ Color greyLightBackgroundColor = Color.fromARGB(255, 243, 243, 243);
 Color greyDarkTextBackgroundColor = Color.fromARGB(255, 72, 72, 72);
 Color greyLighTextBackgroundColor = Color.fromARGB(255, 243, 243, 243);
 Color mutedTextColor = Colors.blueGrey;
+Color lightPlaceHolderColor = Color.fromARGB(255, 164, 164, 164);
+Color darkPlaceHolderColor = Color.fromARGB(255, 93, 93, 93);
