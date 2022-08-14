@@ -38,9 +38,9 @@ class _MyAppState extends State<MyApp> {
           )
         ],
         child: CupertinoApp(
-          theme: themeState.currentTheme == 'dark'
-              ? const CupertinoThemeData(brightness: Brightness.dark)
-              : const CupertinoThemeData(brightness: Brightness.light),
+          theme: CupertinoThemeData(
+              textTheme:
+                  CupertinoTextThemeData(primaryColor: globals.appAccentColor)),
           debugShowCheckedModeBanner: false,
           home: const MyStatefulWidget(),
           onGenerateRoute: (RouteSettings settings) {
@@ -99,9 +99,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   theme.currentTheme == 'dark' ? Colors.black : Colors.white,
               trailing: CupertinoButton(
                 padding: EdgeInsets.zero,
-                // onPressed: () => Navigator.pushNamed(context, '/add'),
-                onPressed: () => themeActions
-                    .setTheme(theme.currentTheme == 'dark' ? 'light' : 'dark'),
+                onPressed: () => Navigator.pushNamed(context, '/add'),
                 child: const Icon(
                   CupertinoIcons.add,
                   color: Colors.green,
