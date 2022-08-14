@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/SettingsScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
 import 'package:to_dos/screens/ToDoNotificationsScreen.dart';
@@ -14,10 +15,10 @@ import 'package:to_dos/state/todo/state.dart';
 import 'package:to_dos/state/user/state.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -28,7 +29,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print(themeState.currentTheme);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ToDoState()),
@@ -83,8 +83,8 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [
     ToDoListScreen(),
-    ToDoNotificationsScreen(),
-    SettingsTab()
+    const AddToDoScreen(),
+    SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
   ToDoState toDoState = ToDoState();
@@ -111,6 +111,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 'ToDos',
                 style: TextStyle(color: Colors.green),
               ),
+              leading: const Icon(
+                CupertinoIcons.person_fill,
+                color: Colors.green,
+                size: 24,
+              ),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
@@ -121,11 +126,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(
-                        CupertinoIcons.list_dash,
+                        CupertinoIcons.square_list_fill,
                         size: 24,
                         color: Colors.green,
                       ),
-                      label: 'Home',
+                      label: 'ToDos',
                     ),
                     BottomNavigationBarItem(
                         icon: Badge(
@@ -134,9 +139,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             toDos.notificationCount.toString(),
                             style: const TextStyle(color: Colors.white),
                           ),
+                          position: const BadgePosition(bottom: 4, start: 10),
                           badgeColor: globals.notificationBadgeColor,
                           child: const Icon(
-                            CupertinoIcons.bell,
+                            CupertinoIcons.bell_fill,
                             color: Colors.green,
                             size: 24,
                           ),
@@ -156,35 +162,5 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 }),
           ))),
     );
-  }
-}
-
-class SettingsTab extends StatefulWidget {
-  SettingsTab({Key? key}) : super(key: key);
-
-  @override
-  State<SettingsTab> createState() => _SettingsTabState();
-}
-
-class _SettingsTabState extends State<SettingsTab> {
-  late ThemeActions themeActions = ThemeActions(context: context);
-  ThemeState themeState = ThemeState();
-  bool themeIsDark = false;
-
-  @override
-  void initState() {
-    super.initState();
-    themeIsDark = false;
-  }
-
-  Function changeTheme = (value) {
-    print(value);
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: CupertinoSwitch(
-            value: themeIsDark, onChanged: (value) => changeTheme(value)));
   }
 }
