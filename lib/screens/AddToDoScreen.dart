@@ -4,7 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
+import 'package:to_dos/helpers/ToDo.dart' as toDoHelpers;
 
 class AddToDoScreen extends StatefulWidget {
   const AddToDoScreen({Key? key}) : super(key: key);
@@ -14,10 +17,12 @@ class AddToDoScreen extends StatefulWidget {
 }
 
 class _AddToDoScreenState extends State<AddToDoScreen> {
+  final toDoListRef = FirebaseDatabase.instance.ref('todos');
+  late DatabaseReference newToDoRef;
   late ToDoActions toDoActions = ToDoActions(context: context);
   String toDoName = '';
   String toDoDescription = '';
-  bool completed = false;
+  bool toDoCompleted = false;
 
   @override
   void initState() {
@@ -25,9 +30,9 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   }
 
   void addToDo() {
-    toDoActions.addToDo(toDoName, toDoDescription, completed);
-
-    Navigator.pop(context);
+    toDoHelpers.createNewToDo(toDoName, toDoDescription, toDoCompleted);
+// toDoActions.addToDo(toDoName, toDoDescription, toDoCompleted);
+    // Navigator.pop(context);
   }
 
   void setAddToDoFormFieldValues(field, value) {
@@ -91,7 +96,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                                     : globals.lightThemeTextColor),
                           ),
                           placeholder: 'Enter Title',
-                          onChanged: (value) => {toDoDescription = value},
+                          onChanged: (value) => {toDoName = value},
                         ),
                         CupertinoTextFormFieldRow(
                           placeholderStyle: TextStyle(
@@ -136,9 +141,9 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                                       : globals.lightThemeTextColor),
                             ),
                             child: CupertinoSwitch(
-                                value: completed,
+                                value: toDoCompleted,
                                 onChanged: (value) => setState(() {
-                                      completed = value;
+                                      toDoCompleted = value;
                                     }))),
                       ]),
                   CupertinoFormSection.insetGrouped(

@@ -1,7 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/components/ToDoCard.dart';
+import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
@@ -28,61 +30,55 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
     toDoActions.searchToDos(keyword);
   }
 
+  // postListRef.onValue.listen((DatabaseEvent event) {
+  //   final data = event.snapshot.value;
+  //   print(data);
+  // });
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ToDoState, ThemeState>(
-      builder: (context, toDos, theme, child) => SafeArea(
-        child: Container(
-          color: theme.currentTheme == 'dark' ? Colors.black : Colors.white,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 20, bottom: 20),
-                child: CupertinoSearchTextField(
-                    placeholder: 'Search ToDos',
-                    style: const TextStyle(color: Colors.grey),
-                    onChanged: ((value) => searchToDos(value))),
-              ),
-              Expanded(
-                  child: toDos.toDoList.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'You have no ToDos',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            Expanded(
-                                child: Column(
-                              children: [
-                                ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemCount: toDos.toDoList.length,
-                                    itemBuilder: ((context, index) => Row(
-                                          children: [
-                                            ToDoCard(
-                                              id: toDos.toDoList[index].id,
-                                              title: toDos.toDoList[index].name,
-                                              description: toDos
-                                                  .toDoList[index].description,
-                                              completed: toDos
-                                                  .toDoList[index].completed,
-                                              createdAt: toDos
-                                                  .toDoList[index].createdAt,
-                                            )
-                                          ],
-                                        )))
-                              ],
-                            ))
-                          ],
-                        ))
-            ],
-          ),
-        ),
-      ),
+    DatabaseReference postListRef = FirebaseDatabase.instance.ref("todos");
+    return StreamBuilder(
+      stream: postListRef.onValue,
+      builder: (context, snapshot) {
+        List<ToDo> messageList = [];
+        if (snapshot.hasData &&
+            snapshot.data != null &&
+            (snapshot.data! as DatabaseEvent).snapshot.value != null) {
+          final myMessages = Map<dynamic, dynamic>.from(
+              (snapshot.data! as DatabaseEvent).snapshot.value
+                  as Map<dynamic, dynamic>); //typecasting
+          myMessages.forEach((key, value) {
+            final currentMessage = Map<String, dynamic>.from(value);
+            print(currentMessage);
+            messageList.add(ToDo(
+              id: '1',
+              name: currentMessage['title'],
+              description: currentMessage['description'],
+              completed: currentMessage['completed'],
+              createdAt: DateTime.fromMillisecondsSinceEpoch(
+                  currentMessage['createdAt']),
+            ));
+          }); //created a class called message and added all messages in a List of class message
+          return ListView.builder(
+            reverse: true,
+            itemCount: messageList.length,
+            itemBuilder: (context, index) {
+              print(messageList[index].name);
+              return Text(messageList[index].name);
+            },
+          );
+        } else {
+          return const Center(
+            child: Text(
+              'Say Hi...',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w400),
+            ),
+          );
+        }
+      },
     );
   }
 }
