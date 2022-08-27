@@ -17,7 +17,6 @@ class ThemeActions {
   }
 
   setTheme(theme) async {
-    print(theme);
     var setThemePrefs = await SharedPreferences.getInstance();
     setThemePrefs.setString('theme', theme);
     themeState.currentTheme = theme;

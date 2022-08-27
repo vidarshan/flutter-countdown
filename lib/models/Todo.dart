@@ -8,13 +8,15 @@ class ToDo {
   String description;
   bool completed;
   int createdAt;
+  String nodeKey;
 
   ToDo(
       {required this.id,
       required this.name,
       required this.description,
       required this.completed,
-      required this.createdAt});
+      required this.createdAt,
+      required this.nodeKey});
 
   factory ToDo.fromJson(Map<String, dynamic> jsonData) {
     return ToDo(
@@ -22,7 +24,8 @@ class ToDo {
         name: jsonData['name'],
         description: jsonData['description'],
         completed: jsonData['completed'] ?? false,
-        createdAt: jsonData['createdAt']);
+        createdAt: jsonData['createdAt'],
+        nodeKey: jsonData['key']);
   }
 
   static Map<String, dynamic> toMap(ToDo toDo) => {

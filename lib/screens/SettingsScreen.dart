@@ -62,7 +62,3 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
-
-//  Center(
-//             child: CupertinoSwitch(
-//                 value: false, onChanged: (value) => print(value)))

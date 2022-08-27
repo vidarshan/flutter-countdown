@@ -66,6 +66,7 @@ class _MyAppState extends State<MyApp> {
                           description: '',
                           completed: false,
                           createdAt: 0,
+                          nodeKey: '',
                         ),
                     settings: settings);
               case '/signup':
@@ -109,29 +110,29 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 onPressed: () => Navigator.pushNamed(context, '/add'),
                 child: const Icon(
                   CupertinoIcons.add,
-                  color: Colors.green,
+                  color: Colors.blue,
                 ),
               ),
               middle: const Text(
                 'ToDos',
-                style: TextStyle(color: Colors.green),
+                style: TextStyle(color: Colors.blue),
               ),
               leading: const Icon(
                 CupertinoIcons.person_fill,
-                color: Colors.green,
+                color: Colors.blue,
                 size: 24,
               ),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
-                  activeColor: Colors.green,
+                  activeColor: Colors.blue,
                   backgroundColor: CupertinoColors.quaternarySystemFill,
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(
                         CupertinoIcons.square_list_fill,
                         size: 24,
-                        color: Colors.green,
+                        color: Colors.blue,
                       ),
                       label: 'ToDos',
                     ),
@@ -146,7 +147,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           badgeColor: globals.notificationBadgeColor,
                           child: const Icon(
                             CupertinoIcons.bell_fill,
-                            color: Colors.green,
+                            color: Colors.blue,
                             size: 24,
                           ),
                         ),
@@ -154,7 +155,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     const BottomNavigationBarItem(
                         icon: Icon(
                           CupertinoIcons.settings,
-                          color: Colors.green,
+                          color: Colors.blue,
                           size: 24,
                         ),
                         label: 'Settings')

@@ -20,16 +20,17 @@ void createNewToDo(title, description, completed) {
   });
 }
 
-void updateToDo(id, title, description, completed, createdAt) {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("todos");
-  // Timestamp timestamp = Timestamp.fromDate(createdAt);
-  // print(timestamp);
-
+void updateToDo(id, title, description, completed, createdAt, nodeKey) {
+  DatabaseReference ref =
+      FirebaseDatabase.instance.ref().child('todos/$nodeKey');
   ref.update({
-    "$id/id": id,
-    "$id/title": title,
-    "$id/description": description,
-    "$id/completed": completed,
-    "$id/createdAt": 1661579857,
+    "title": title,
+    "description": description,
+    "completed": completed,
   });
+}
+
+void deleteToDo(nodekey) {
+  DatabaseReference ref = FirebaseDatabase.instance.ref("todos/$nodekey");
+  ref.remove();
 }

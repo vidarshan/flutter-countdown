@@ -55,9 +55,5 @@ class UserActions {
     user.update();
   }
 
-  void login(email, password) {
-    print('login');
-  }
-
-  //call update
+  void login(email, password) {}
 }

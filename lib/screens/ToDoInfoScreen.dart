@@ -12,6 +12,7 @@ class ToDoInfoScreen extends StatefulWidget {
   final String description;
   final bool completed;
   final int createdAt;
+  final String nodeKey;
 
   const ToDoInfoScreen(
       {Key? key,
@@ -19,7 +20,8 @@ class ToDoInfoScreen extends StatefulWidget {
       required this.title,
       required this.description,
       required this.completed,
-      required this.createdAt})
+      required this.createdAt,
+      required this.nodeKey})
       : super(key: key);
 
   @override
@@ -48,11 +50,13 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
   }
 
   void editToDo(id, title, description, completed, createdAt) {
-    toDoHelpers.updateToDo(id, title, description, completed, widget.createdAt);
+    toDoHelpers.updateToDo(
+        id, title, description, completed, widget.createdAt, widget.nodeKey);
     Navigator.pop(context);
   }
 
-  void deleteToDo(id) {
+  void deleteToDo() {
+    toDoHelpers.deleteToDo(widget.nodeKey);
     Navigator.pop(context);
   }
 
@@ -133,7 +137,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                     width: double.maxFinite,
                     child: CupertinoButton(
                         color: Colors.redAccent,
-                        onPressed: () => deleteToDo(widget.id),
+                        onPressed: () => deleteToDo(),
                         child: const Text('Delete Todo')),
                   ),
                 ),

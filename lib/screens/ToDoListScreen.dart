@@ -42,14 +42,15 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
               (snapshot.data! as DatabaseEvent).snapshot.value
                   as Map<dynamic, dynamic>); //typecasting
           myMessages.forEach((key, value) {
+            print(key);
             final toDo = Map<String, dynamic>.from(value);
-            print(toDo);
             toDoList.add(ToDo(
               id: toDo['id'],
               name: toDo['title'],
               description: toDo['description'],
               completed: toDo['completed'],
               createdAt: toDo['createdAt'],
+              nodeKey: key,
             ));
           });
           return Column(
@@ -84,6 +85,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                   description: toDoList[index].description,
                                   completed: toDoList[index].completed,
                                   createdAt: toDoList[index].createdAt,
+                                  nodeKey: toDoList[index].nodeKey,
                                 )
                               ],
                             );
