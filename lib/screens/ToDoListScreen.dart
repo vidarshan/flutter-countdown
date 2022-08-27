@@ -22,25 +22,19 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   void initState() {
     super.initState();
     ToDoActions toDoActions = ToDoActions(context: context);
-    toDoActions.readFromSharedPreferences();
   }
 
   void searchToDos(keyword) {
     ToDoActions toDoActions = ToDoActions(context: context);
-    toDoActions.searchToDos(keyword);
   }
 
-  // postListRef.onValue.listen((DatabaseEvent event) {
-  //   final data = event.snapshot.value;
-  //   print(data);
-  // });
   @override
   Widget build(BuildContext context) {
     DatabaseReference postListRef = FirebaseDatabase.instance.ref("todos");
     return StreamBuilder(
       stream: postListRef.onValue,
       builder: (context, snapshot) {
-        List<ToDo> messageList = [];
+        List<ToDo> toDoList = [];
         if (snapshot.hasData &&
             snapshot.data != null &&
             (snapshot.data! as DatabaseEvent).snapshot.value != null) {
@@ -48,33 +42,60 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
               (snapshot.data! as DatabaseEvent).snapshot.value
                   as Map<dynamic, dynamic>); //typecasting
           myMessages.forEach((key, value) {
-            final currentMessage = Map<String, dynamic>.from(value);
-            print(currentMessage);
-            messageList.add(ToDo(
-              id: '1',
-              name: currentMessage['title'],
-              description: currentMessage['description'],
-              completed: currentMessage['completed'],
-              createdAt: DateTime.fromMillisecondsSinceEpoch(
-                  currentMessage['createdAt']),
+            final toDo = Map<String, dynamic>.from(value);
+            print(toDo);
+            toDoList.add(ToDo(
+              id: toDo['id'],
+              name: toDo['title'],
+              description: toDo['description'],
+              completed: toDo['completed'],
+              createdAt: toDo['createdAt'],
             ));
-          }); //created a class called message and added all messages in a List of class message
-          return ListView.builder(
-            reverse: true,
-            itemCount: messageList.length,
-            itemBuilder: (context, index) {
-              print(messageList[index].name);
-              return Text(messageList[index].name);
-            },
+          });
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 10, bottom: 10),
+                child: CupertinoSearchTextField(
+                    placeholder: 'Search ToDos',
+                    style: const TextStyle(color: Colors.grey),
+                    onChanged: ((value) => searchToDos(value))),
+              ),
+              Container(
+                  child: toDoList.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'You have no ToDos',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: toDoList.length,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              children: [
+                                ToDoCard(
+                                  id: toDoList[index].id,
+                                  title: toDoList[index].name,
+                                  description: toDoList[index].description,
+                                  completed: toDoList[index].completed,
+                                  createdAt: toDoList[index].createdAt,
+                                )
+                              ],
+                            );
+                          },
+                        )))
+            ],
           );
         } else {
           return const Center(
             child: Text(
-              'Say Hi...',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 21,
-                  fontWeight: FontWeight.w400),
+              'You have no ToDos',
+              style: TextStyle(color: Colors.grey),
             ),
           );
         }

@@ -13,7 +13,7 @@ class ToDoCard extends StatelessWidget {
   final String title;
   final String description;
   final bool completed;
-  final DateTime createdAt;
+  final int createdAt;
 
   final List<Color> circleColors = [Colors.red, Colors.blue, Colors.green];
 
@@ -32,6 +32,7 @@ class ToDoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(createdAt);
     return Consumer<ThemeState>(
       builder: ((context, theme, child) => GestureDetector(
             onLongPress: () => print(theme.currentTheme),
@@ -86,8 +87,9 @@ class ToDoCard extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                DateFormat('yyyy-MM-dd kk:mm')
-                                    .format(createdAt),
+                                DateFormat('yyyy-MM-dd kk:mm a').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        createdAt)),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

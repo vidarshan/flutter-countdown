@@ -15,7 +15,21 @@ void createNewToDo(title, description, completed) {
     'id': uuid.v4(),
     'title': title,
     'description': description,
-    'completed': true,
+    'completed': false,
     'createdAt': ServerValue.timestamp
+  });
+}
+
+void updateToDo(id, title, description, completed, createdAt) {
+  DatabaseReference ref = FirebaseDatabase.instance.ref("todos");
+  // Timestamp timestamp = Timestamp.fromDate(createdAt);
+  // print(timestamp);
+
+  ref.update({
+    "$id/id": id,
+    "$id/title": title,
+    "$id/description": description,
+    "$id/completed": completed,
+    "$id/createdAt": 1661579857,
   });
 }

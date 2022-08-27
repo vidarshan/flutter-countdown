@@ -31,8 +31,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
 
   void addToDo() {
     toDoHelpers.createNewToDo(toDoName, toDoDescription, toDoCompleted);
-// toDoActions.addToDo(toDoName, toDoDescription, toDoCompleted);
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   void setAddToDoFormFieldValues(field, value) {

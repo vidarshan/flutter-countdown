@@ -60,12 +60,12 @@ class _MyAppState extends State<MyApp> {
                     builder: (_) => const AddToDoScreen(), settings: settings);
               case '/info':
                 return CupertinoPageRoute(
-                    builder: (_) => ToDoInfoScreen(
+                    builder: (_) => const ToDoInfoScreen(
                           id: '',
                           title: '',
                           description: '',
                           completed: false,
-                          createdAt: DateTime.now(),
+                          createdAt: 0,
                         ),
                     settings: settings);
               case '/signup':
@@ -125,9 +125,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
                   activeColor: Colors.green,
-                  backgroundColor: theme.currentTheme == 'dark'
-                      ? Colors.black
-                      : Colors.white,
+                  backgroundColor: CupertinoColors.quaternarySystemFill,
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(

@@ -7,7 +7,7 @@ class ToDo {
   String name;
   String description;
   bool completed;
-  DateTime createdAt;
+  int createdAt;
 
   ToDo(
       {required this.id,
@@ -22,7 +22,7 @@ class ToDo {
         name: jsonData['name'],
         description: jsonData['description'],
         completed: jsonData['completed'] ?? false,
-        createdAt: DateTime.parse(jsonData['createdAt']));
+        createdAt: jsonData['createdAt']);
   }
 
   static Map<String, dynamic> toMap(ToDo toDo) => {
@@ -30,7 +30,7 @@ class ToDo {
         'name': toDo.name,
         'description': toDo.description,
         'completed': toDo.completed,
-        'createdAt': DateFormat('yyyy-MM-dd kk:mm').format(toDo.createdAt),
+        'createdAt': toDo.createdAt,
       };
 
   static String encode(List<ToDo>? toDos) => json.encode(

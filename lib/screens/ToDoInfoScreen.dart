@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
+import 'package:to_dos/helpers/ToDo.dart' as toDoHelpers;
 
 class ToDoInfoScreen extends StatefulWidget {
   final String id;
   final String title;
   final String description;
   final bool completed;
-  final DateTime createdAt;
+  final int createdAt;
 
   const ToDoInfoScreen(
       {Key? key,
@@ -42,47 +43,21 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
     _titleController.text = widget.title;
     _descriptionController.text = widget.description;
     completed = widget.completed;
-
     title = widget.title;
     description = widget.description;
-
-    // toDoState.editListItem.id = widget.id;
-    // toDoState.editListItem.name = widget.title;
-    // toDoState.editListItem.description = widget.description;
-    // toDoState.editListItem.completed = widget.completed;
-    // toDoState.editListItem.createdAt = widget.createdAt;
   }
 
   void editToDo(id, title, description, completed, createdAt) {
-    print('wid ${id}');
-    print('id ${id}');
-    toDoActions.editToDo(id, title, description, completed, createdAt);
+    toDoHelpers.updateToDo(id, title, description, completed, widget.createdAt);
     Navigator.pop(context);
   }
 
-  // void onChange(field, value) {
-  //   if (field == 'title') {
-  //     toDoActions.setEditToDoItem(widget.id, value, widget.description,
-  //         widget.completed, widget.createdAt);
-  //   } else if (field == 'description') {
-  //     toDoActions.setEditToDoItem(
-  //         widget.id, widget.title, value, widget.completed, widget.createdAt);
-  //   } else {
-  //     toDoActions.setEditToDoItem(
-  //         widget.id, widget.title, widget.description, value, widget.createdAt);
-  //   }
-  // }
-
   void deleteToDo(id) {
-    toDoActions.deleteToDo(id);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd kk:mm').format(widget.createdAt);
-
     return CupertinoPageScaffold(
         navigationBar: const CupertinoNavigationBar(previousPageTitle: 'ToDos'),
         child: Container(
@@ -137,7 +112,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
-                      'Created at ${DateFormat('yyyy-MM-dd - h:mm a').format(widget.createdAt)}',
+                      'Created at ${DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.fromMillisecondsSinceEpoch(widget.createdAt))}',
                       style: const TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   ),
