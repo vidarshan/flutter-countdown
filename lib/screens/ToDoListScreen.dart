@@ -31,7 +31,8 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   @override
   Widget build(BuildContext context) {
     DatabaseReference postListRef = FirebaseDatabase.instance.ref("todos");
-    return StreamBuilder(
+    return CupertinoPageScaffold(
+        child: StreamBuilder(
       stream: postListRef.onValue,
       builder: (context, snapshot) {
         List<ToDo> toDoList = [];
@@ -94,14 +95,16 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
             ],
           );
         } else {
-          return const Center(
-            child: Text(
-              'You have no ToDos',
-              style: TextStyle(color: Colors.grey),
+          return const CupertinoPageScaffold(
+            child: Center(
+              child: Text(
+                'You have no ToDos',
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
           );
         }
       },
-    );
+    ));
   }
 }

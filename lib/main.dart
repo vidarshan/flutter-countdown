@@ -11,8 +11,8 @@ import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/state.dart';
-import 'package:to_dos/state/user/state.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:to_dos/state/user/actions.dart';
 import 'firebase_options.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
 
@@ -33,13 +33,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeState themeState = ThemeState();
+  UserActions useractions = UserActions();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ToDoState()),
-          ChangeNotifierProvider(create: (context) => UserState()),
           ChangeNotifierProvider(
             create: (context) => ThemeState(),
           )
@@ -49,7 +49,23 @@ class _MyAppState extends State<MyApp> {
               textTheme:
                   CupertinoTextThemeData(primaryColor: globals.appAccentColor)),
           debugShowCheckedModeBanner: false,
-          home: const MyStatefulWidget(),
+          home: FutureBuilder(
+              future: useractions.getUser(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.error != null) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return snapshot.hasData
+                      ? const MyStatefulWidget()
+                      : LogInScreen();
+                } else {
+                  return const CupertinoPageScaffold(
+                      child: Center(
+                    child: Text('No'),
+                  ));
+                }
+              }),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
               case '/':
@@ -117,11 +133,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 'ToDos',
                 style: TextStyle(color: Colors.blue),
               ),
-              leading: const Icon(
-                CupertinoIcons.person_fill,
-                color: Colors.blue,
-                size: 24,
-              ),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
@@ -154,11 +165,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         label: 'Notifications'),
                     const BottomNavigationBarItem(
                         icon: Icon(
-                          CupertinoIcons.settings,
+                          CupertinoIcons.person_fill,
                           color: Colors.blue,
                           size: 24,
                         ),
-                        label: 'Settings')
+                        label: 'Settings'),
                   ],
                 ),
                 tabBuilder: (BuildContext context, index) {

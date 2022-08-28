@@ -29,8 +29,8 @@ class ToDoInfoScreen extends StatefulWidget {
 }
 
 class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   late bool completed;
 
   late String title;

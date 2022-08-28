@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:to_dos/state/user/actions.dart';
 
 class LogInScreen extends StatefulWidget {
   LogInScreen({Key? key}) : super(key: key);
@@ -9,6 +11,12 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String email = '';
+  String password = '';
+  UserActions userActions = UserActions();
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -26,17 +34,21 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 28),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
             child: CupertinoTextField(
+              controller: _emailController,
               placeholder: 'Your username',
+              onChanged: (value) => email = value,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 28),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
             child: CupertinoTextField(
+              controller: _passwordController,
               obscureText: true,
               placeholder: 'Your password',
+              onChanged: (value) => password = value,
             ),
           ),
           Padding(
@@ -44,9 +56,13 @@ class _LogInScreenState extends State<LogInScreen> {
             child: SizedBox(
               width: double.maxFinite,
               child: CupertinoButton.filled(
-                child: const Text('Log in'),
-                onPressed: () => Navigator.pop(context),
-              ),
+                  child: const Text('Log in'),
+                  onPressed: () => userActions
+                      .loginUser(email, password)
+                      .then((value) => userActions.getUser().then((value) => {
+                            if (value?.uid != null)
+                              {Navigator.pushReplacementNamed(context, '/')}
+                          }))),
             ),
           ),
           Padding(
@@ -55,7 +71,7 @@ class _LogInScreenState extends State<LogInScreen> {
               width: double.maxFinite,
               child: CupertinoButton(
                 child: const Text('New user?'),
-                onPressed: () => Navigator.pushNamed(context, '/login'),
+                onPressed: () => Navigator.pushNamed(context, '/signup'),
               ),
             ),
           ),

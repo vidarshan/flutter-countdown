@@ -5,6 +5,7 @@ import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
+import 'package:to_dos/state/user/actions.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeActions themeActions = ThemeActions(context: context);
+    UserActions userActions = UserActions();
 
     return Consumer<ThemeState>(
       builder: (context, theme, child) => CupertinoPageScaffold(
@@ -54,6 +56,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 theme.currentTheme == 'dark'
                                     ? 'light'
                                     : 'dark'))),
+                    CupertinoFormRow(
+                      child: CupertinoButton(
+                        child: Text('Log out'),
+                        color: Colors.red,
+                        onPressed: () => userActions.signOut().then((value) =>
+                            userActions.getUser().then((value) => value == null
+                                ? Navigator.pushReplacementNamed(
+                                    context, '/login')
+                                : Navigator.pushReplacementNamed(
+                                    context, '/'))),
+                      ),
+                    )
                   ]),
             )),
           ),

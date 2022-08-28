@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_dos/models/User.dart';
+import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:to_dos/state/user/actions.dart';
-import 'package:to_dos/state/user/state.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -13,15 +14,22 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  UserState userState = UserState();
-  late UserActions userActions = UserActions(context: context);
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final UserActions userActions = UserActions();
   String username = '';
+  String email = '';
   String password = '';
 
   @override
   void initState() {
     super.initState();
     () => Navigator.pushNamed(context, '/');
+  }
+
+  void registerUser() async {
+    UserActions.mailRegister(email, password);
   }
 
   @override
@@ -43,16 +51,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: CupertinoTextField(
-              placeholder: 'Your username',
-              onChanged: (value) => username = value,
+            child: SizedBox(
+              height: 40,
+              child: CupertinoTextField(
+                controller: _usernameController,
+                placeholder: 'Your username',
+                onChanged: (value) => username = value,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: CupertinoTextField(
-              placeholder: 'Your password',
-              onChanged: (value) => password = value,
+            child: SizedBox(
+              height: 40,
+              child: CupertinoTextField(
+                controller: _emailController,
+                placeholder: 'Your email',
+                onChanged: (value) => email = value,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
+            child: SizedBox(
+              height: 40,
+              child: CupertinoTextField(
+                controller: _passwordController,
+                placeholder: 'Your password',
+                onChanged: (value) => password = value,
+              ),
             ),
           ),
           Padding(
@@ -60,8 +87,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: SizedBox(
               width: double.maxFinite,
               child: CupertinoButton.filled(
-                child: const Text('Create account'),
-                onPressed: () => userActions.register(username, password),
+                child: const Text('Sign up'),
+                onPressed: () =>
+                    UserActions.mailRegister(email, password).then((value) => {
+                          if (value == null)
+                            Navigator.pushReplacementNamed(context, '/')
+                          else
+                            {print('value-f $value')}
+                        }),
               ),
             ),
           ),
@@ -71,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               width: double.maxFinite,
               child: CupertinoButton(
                 child: const Text('Have an account?'),
-                onPressed: () => Navigator.pushNamed(context, '/login'),
+                onPressed: () => Navigator.pushNamed(context, '/signup'),
               ),
             ),
           ),
