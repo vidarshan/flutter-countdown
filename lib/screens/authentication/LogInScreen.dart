@@ -17,6 +17,25 @@ class _LogInScreenState extends State<LogInScreen> {
   String password = '';
   UserActions userActions = UserActions();
 
+  void showAlertDialog(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('Incorrect Credentials'),
+        content: const Text('Try again with correct credentials.'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: false,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -36,20 +55,24 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: CupertinoTextField(
-              controller: _emailController,
-              placeholder: 'Your username',
-              onChanged: (value) => email = value,
-            ),
+            child: SizedBox(
+                height: 40,
+                child: CupertinoTextField(
+                  controller: _emailController,
+                  placeholder: 'Your email',
+                  onChanged: (value) => email = value,
+                )),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: CupertinoTextField(
-              controller: _passwordController,
-              obscureText: true,
-              placeholder: 'Your password',
-              onChanged: (value) => password = value,
-            ),
+            child: SizedBox(
+                height: 40,
+                child: CupertinoTextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  placeholder: 'Your password',
+                  onChanged: (value) => password = value,
+                )),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 0),
@@ -62,6 +85,8 @@ class _LogInScreenState extends State<LogInScreen> {
                       .then((value) => userActions.getUser().then((value) => {
                             if (value?.uid != null)
                               {Navigator.pushReplacementNamed(context, '/')}
+                            else
+                              {showAlertDialog(context)}
                           }))),
             ),
           ),

@@ -7,7 +7,6 @@ class UserActions with ChangeNotifier {
   get user => _auth.currentUser;
 
   Future<User?> getUser() async {
-    print(_auth.currentUser);
     return _auth.currentUser;
   }
 

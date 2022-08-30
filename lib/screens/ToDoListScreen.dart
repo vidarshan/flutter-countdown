@@ -43,7 +43,6 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
               (snapshot.data! as DatabaseEvent).snapshot.value
                   as Map<dynamic, dynamic>); //typecasting
           myMessages.forEach((key, value) {
-            print(key);
             final toDo = Map<String, dynamic>.from(value);
             toDoList.add(ToDo(
               id: toDo['id'],
