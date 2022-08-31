@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/authentication/ErrorScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
@@ -38,17 +39,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           CupertinoTextFormFieldRow(
                             prefix: const Text('Username'),
-                            initialValue: 'Sample User',
+                            initialValue: snapshot.data.displayName,
                             placeholder: 'Sample User',
                           ),
                           CupertinoTextFormFieldRow(
                             prefix: const Text('Email ID'),
-                            initialValue: email,
+                            initialValue: snapshot.data.email,
                           ),
                           CupertinoTextFormFieldRow(
-                            prefix: const Text('Last login'),
-                            initialValue: '11-08-2022 13:11 PM',
-                          ),
+                              prefix: const Text('Created at'),
+                              initialValue:
+                                  DateFormat('yyyy-MM-dd kk:mm a').format(
+                                snapshot.data?.metadata.creationTime,
+                              )),
+                          CupertinoTextFormFieldRow(
+                              prefix: const Text('Last login'),
+                              initialValue:
+                                  DateFormat('yyyy-MM-dd kk:mm a').format(
+                                snapshot.data?.metadata.lastSignInTime,
+                              )),
                         ],
                       ),
                       CupertinoFormSection.insetGrouped(
