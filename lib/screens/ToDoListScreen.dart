@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
+import 'package:to_dos/state/user/actions.dart';
 
 class ToDoListScreen extends StatefulWidget {
   ToDoListScreen({Key? key}) : super(key: key);
@@ -17,11 +19,14 @@ class ToDoListScreen extends StatefulWidget {
 
 class _ToDoListScreenState extends State<ToDoListScreen> {
   ToDoState toDoState = ToDoState();
+  UserActions userActions = UserActions();
+  var user = '';
 
   @override
   void initState() {
     super.initState();
     ToDoActions toDoActions = ToDoActions(context: context);
+    UserActions userActions = UserActions();
   }
 
   void searchToDos(keyword) {
@@ -30,7 +35,11 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference postListRef = FirebaseDatabase.instance.ref("todos");
+    FirebaseAuth auth = FirebaseAuth.instance;
+    Query postListRef = FirebaseDatabase.instance
+        .ref("todos")
+        .orderByChild('userUID')
+        .equalTo(auth.currentUser?.uid);
     return CupertinoPageScaffold(
         child: StreamBuilder(
       stream: postListRef.onValue,
@@ -41,17 +50,17 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
             (snapshot.data! as DatabaseEvent).snapshot.value != null) {
           final myMessages = Map<dynamic, dynamic>.from(
               (snapshot.data! as DatabaseEvent).snapshot.value
-                  as Map<dynamic, dynamic>); //typecasting
+                  as Map<dynamic, dynamic>);
           myMessages.forEach((key, value) {
             final toDo = Map<String, dynamic>.from(value);
             toDoList.add(ToDo(
-              id: toDo['id'],
-              name: toDo['title'],
-              description: toDo['description'],
-              completed: toDo['completed'],
-              createdAt: toDo['createdAt'],
-              nodeKey: key,
-            ));
+                id: toDo['id'],
+                name: toDo['title'],
+                description: toDo['description'],
+                completed: toDo['completed'],
+                createdAt: toDo['createdAt'],
+                nodeKey: key,
+                userUID: toDo['userUID']));
           });
           return Column(
             children: [

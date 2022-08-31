@@ -66,19 +66,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       CupertinoFormSection.insetGrouped(
                           header: const Text('ACTIONS'),
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: CupertinoButton(
-                                    color: Colors.black,
-                                    onPressed: () => print('object'),
-                                    child: const Text(
-                                      'Delete Account',
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                              ),
-                            ),
                             SizedBox(
                               width: double.infinity,
                               child: CupertinoButton(
