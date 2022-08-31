@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/SearchToDoScreen.dart';
 import 'package:to_dos/screens/SettingsScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
+import 'package:to_dos/screens/ToDoNotificationsScreen.dart';
 import 'package:to_dos/screens/authentication/LogInScreen.dart';
 import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
@@ -107,7 +109,8 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [
     ToDoListScreen(),
-    const AddToDoScreen(),
+    SearchToDoScreen(),
+    ToDoNotificationsScreen(),
     SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
@@ -137,16 +140,23 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
                   activeColor: Colors.blue,
-                  backgroundColor: CupertinoColors.quaternarySystemFill,
+                  // backgroundColor: CupertinoColors.quaternarySystemFill,
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(
-                        CupertinoIcons.square_list_fill,
+                        CupertinoIcons.list_bullet,
                         size: 24,
                         color: Colors.blue,
                       ),
                       label: 'ToDos',
                     ),
+                    const BottomNavigationBarItem(
+                        icon: Icon(
+                          CupertinoIcons.search,
+                          color: Colors.blue,
+                          size: 24,
+                        ),
+                        label: 'Search'),
                     BottomNavigationBarItem(
                         icon: Badge(
                           animationType: BadgeAnimationType.fade,
@@ -157,7 +167,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           position: const BadgePosition(bottom: 4, start: 10),
                           badgeColor: globals.notificationBadgeColor,
                           child: const Icon(
-                            CupertinoIcons.bell_fill,
+                            CupertinoIcons.bell,
                             color: Colors.blue,
                             size: 24,
                           ),
@@ -165,7 +175,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         label: 'Notifications'),
                     const BottomNavigationBarItem(
                         icon: Icon(
-                          CupertinoIcons.person_fill,
+                          CupertinoIcons.settings,
                           color: Colors.blue,
                           size: 24,
                         ),

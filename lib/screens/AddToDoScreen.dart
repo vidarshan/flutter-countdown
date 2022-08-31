@@ -160,7 +160,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                           child: CupertinoButton(
                               color: globals.appAccentColor,
                               onPressed: addToDo,
-                              child: const Text('Add Todo')),
+                              child: const Text('Add ToDo')),
                         ),
                       )
                     ],

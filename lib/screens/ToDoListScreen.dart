@@ -64,13 +64,34 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
           });
           return Column(
             children: [
+              // Padding(
+              //   padding: const EdgeInsets.only(
+              //       left: 16, right: 16, top: 10, bottom: 10),
+              //   child: CupertinoSearchTextField(
+              //       placeholder: 'Search ToDos',
+              //       style: const TextStyle(color: Colors.grey),
+              //       onChanged: ((value) => searchToDos(value))),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 10, bottom: 10),
-                child: CupertinoSearchTextField(
-                    placeholder: 'Search ToDos',
-                    style: const TextStyle(color: Colors.grey),
-                    onChanged: ((value) => searchToDos(value))),
+                    left: 16, right: 16, top: 15, bottom: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: CupertinoSlidingSegmentedControl(
+                      thumbColor: Colors.white,
+                      groupValue: 'a',
+                      onValueChanged: ((value) {
+                        print(value);
+                      }),
+                      children: const {
+                        'a': Text(
+                          'Completed',
+                        ),
+                        'b': Text(
+                          'Uncompleted',
+                        ),
+                      }),
+                ),
               ),
               Container(
                   child: toDoList.isEmpty

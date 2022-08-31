@@ -133,7 +133,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                       child: CupertinoButton.filled(
                           onPressed: () => editToDo(widget.id, title,
                               description, completed, widget.createdAt),
-                          child: const Text('Edit Todo')),
+                          child: const Text('Edit ToDo')),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -142,7 +142,7 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                         child: CupertinoButton(
                             color: Colors.redAccent,
                             onPressed: () => deleteToDo(),
-                            child: const Text('Delete Todo')),
+                            child: const Text('Delete ToDo')),
                       ),
                     ),
                   ]),
