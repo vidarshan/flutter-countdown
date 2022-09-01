@@ -79,7 +79,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               width: double.infinity,
                               child: CupertinoButton(
                                   color: Colors.red,
-                                  onPressed: () => print('object'),
+                                  onPressed: () => userActions.signOut().then(
+                                      (value) => {
+                                            if (value == null)
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/login')
+                                          }),
                                   child: const Text('Log out')),
                             ),
                           ])

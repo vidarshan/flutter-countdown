@@ -11,8 +11,15 @@ class SearchToDoScreen extends StatefulWidget {
 class _SearchToDoScreenState extends State<SearchToDoScreen> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Text('data'),
+    return SafeArea(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+        child: CupertinoSearchTextField(
+            placeholder: 'Search ToDos',
+            style: const TextStyle(color: Colors.grey),
+            onChanged: ((value) => print(value))),
+      ),
     );
   }
 }

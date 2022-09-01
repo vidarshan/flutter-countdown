@@ -56,13 +56,14 @@ class ToDoCard extends StatelessWidget {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                            color: Color.fromARGB(255, 185, 185, 185)
+                            color: const Color.fromARGB(255, 185, 185, 185)
                                 .withOpacity(0.2),
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: Offset(0, 0.4))
+                            offset: const Offset(0, 0.4))
                       ],
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   child: Row(
                     children: [
                       Row(
@@ -74,14 +75,10 @@ class ToDoCard extends StatelessWidget {
                               Row(
                                 children: [
                                   Column(
-                                    children: [
+                                    children: const [
                                       Icon(
                                         CupertinoIcons.circle_fill,
-                                        color: Color(
-                                                (math.Random().nextDouble() *
-                                                        0xFFFFFF)
-                                                    .toInt())
-                                            .withOpacity(1.0),
+                                        color: Colors.black,
                                         size: 12,
                                       ),
                                     ],

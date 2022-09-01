@@ -21,6 +21,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   ToDoState toDoState = ToDoState();
   UserActions userActions = UserActions();
   var user = '';
+  var completed = 'All';
 
   @override
   void initState() {
@@ -53,25 +54,41 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                   as Map<dynamic, dynamic>);
           myMessages.forEach((key, value) {
             final toDo = Map<String, dynamic>.from(value);
-            toDoList.add(ToDo(
-                id: toDo['id'],
-                name: toDo['title'],
-                description: toDo['description'],
-                completed: toDo['completed'],
-                createdAt: toDo['createdAt'],
-                nodeKey: key,
-                userUID: toDo['userUID']));
+            if (completed == 'All') {
+              toDoList.add(ToDo(
+                  id: toDo['id'],
+                  name: toDo['title'],
+                  description: toDo['description'],
+                  completed: toDo['completed'],
+                  createdAt: toDo['createdAt'],
+                  nodeKey: key,
+                  userUID: toDo['userUID']));
+            } else if (completed == 'Completed') {
+              if (toDo['completed']) {
+                toDoList.add(ToDo(
+                    id: toDo['id'],
+                    name: toDo['title'],
+                    description: toDo['description'],
+                    completed: toDo['completed'],
+                    createdAt: toDo['createdAt'],
+                    nodeKey: key,
+                    userUID: toDo['userUID']));
+              }
+            } else if (completed == 'Uncompleted') {
+              if (!toDo['completed']) {
+                toDoList.add(ToDo(
+                    id: toDo['id'],
+                    name: toDo['title'],
+                    description: toDo['description'],
+                    completed: toDo['completed'],
+                    createdAt: toDo['createdAt'],
+                    nodeKey: key,
+                    userUID: toDo['userUID']));
+              }
+            }
           });
           return Column(
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.only(
-              //       left: 16, right: 16, top: 10, bottom: 10),
-              //   child: CupertinoSearchTextField(
-              //       placeholder: 'Search ToDos',
-              //       style: const TextStyle(color: Colors.grey),
-              //       onChanged: ((value) => searchToDos(value))),
-              // ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 16, right: 16, top: 20, bottom: 10),
@@ -79,17 +96,34 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                   width: double.infinity,
                   child: CupertinoSlidingSegmentedControl(
                       thumbColor: Colors.white,
-                      groupValue: 'a',
+                      groupValue: completed,
                       onValueChanged: ((value) {
-                        print(value);
+                        if (value == 'All') {
+                          setState(() {
+                            completed = 'All';
+                          });
+                        } else if (value == 'Completed') {
+                          setState(() {
+                            completed = 'Completed';
+                          });
+                        } else {
+                          setState(() {
+                            completed = 'Uncompleted';
+                          });
+                        }
                       }),
                       children: const {
-                        'a': Text(
+                        'All': Text(
+                          'All',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                        'Completed': Text(
                           'Completed',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w400),
                         ),
-                        'b': Text(
+                        'Uncompleted': Text(
                           'Uncompleted',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w400),

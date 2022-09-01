@@ -80,14 +80,11 @@ class _LogInScreenState extends State<LogInScreen> {
               width: double.maxFinite,
               child: CupertinoButton.filled(
                   child: const Text('Log in'),
-                  onPressed: () => userActions
-                      .loginUser(email, password)
-                      .then((value) => userActions.getUser().then((value) => {
-                            if (value?.uid != null)
+                  onPressed: () =>
+                      userActions.loginUser(email, password).then((value) => {
+                            if (value.user.uid != null)
                               {Navigator.pushReplacementNamed(context, '/')}
-                            else
-                              {showAlertDialog(context)}
-                          }))),
+                          })),
             ),
           ),
           Padding(
