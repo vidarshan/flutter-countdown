@@ -74,7 +74,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
               // ),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 15, bottom: 10),
+                    left: 16, right: 16, top: 20, bottom: 10),
                 child: SizedBox(
                   width: double.infinity,
                   child: CupertinoSlidingSegmentedControl(
@@ -86,9 +86,13 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                       children: const {
                         'a': Text(
                           'Completed',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
                         ),
                         'b': Text(
                           'Uncompleted',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
                         ),
                       }),
                 ),
@@ -107,17 +111,13 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                           shrinkWrap: true,
                           itemCount: toDoList.length,
                           itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                ToDoCard(
-                                  id: toDoList[index].id,
-                                  title: toDoList[index].name,
-                                  description: toDoList[index].description,
-                                  completed: toDoList[index].completed,
-                                  createdAt: toDoList[index].createdAt,
-                                  nodeKey: toDoList[index].nodeKey,
-                                )
-                              ],
+                            return ToDoCard(
+                              id: toDoList[index].id,
+                              title: toDoList[index].name,
+                              description: toDoList[index].description,
+                              completed: toDoList[index].completed,
+                              createdAt: toDoList[index].createdAt,
+                              nodeKey: toDoList[index].nodeKey,
                             );
                           },
                         )))
