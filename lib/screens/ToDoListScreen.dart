@@ -60,6 +60,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                   name: toDo['title'],
                   description: toDo['description'],
                   completed: toDo['completed'],
+                  color: toDo['color'],
                   createdAt: toDo['createdAt'],
                   nodeKey: key,
                   userUID: toDo['userUID']));
@@ -70,6 +71,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     name: toDo['title'],
                     description: toDo['description'],
                     completed: toDo['completed'],
+                    color: toDo['color'],
                     createdAt: toDo['createdAt'],
                     nodeKey: key,
                     userUID: toDo['userUID']));
@@ -81,6 +83,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     name: toDo['title'],
                     description: toDo['description'],
                     completed: toDo['completed'],
+                    color: toDo['color'],
                     createdAt: toDo['createdAt'],
                     nodeKey: key,
                     userUID: toDo['userUID']));
@@ -150,6 +153,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                               title: toDoList[index].name,
                               description: toDoList[index].description,
                               completed: toDoList[index].completed,
+                              color: toDoList[index].color,
                               createdAt: toDoList[index].createdAt,
                               nodeKey: toDoList[index].nodeKey,
                             );

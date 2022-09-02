@@ -40,15 +40,16 @@ class ToDoActions {
     readFromSharedPreferences();
   }
 
-  void addToDo(title, description, completed, key) {
+  void addToDo(title, description, completed, color, key) {
     ToDo newToDo = ToDo(
         id: uuid.v4(),
         name: title,
         description: description,
         completed: completed,
-        createdAt: 1661579631,
+        color: color,
+        createdAt: 1661579631, //TODO:needs change
         nodeKey: key,
-        userUID: 'NGUUbUdvHQgNWfpz3jIx93jFOzg1');
+        userUID: 'NGUUbUdvHQgNWfpz3jIx93jFOzg1'); //TODO:needs change
     toDos.toDoList.add(newToDo);
     addToSharedPreferences(toDos.toDoList.reversed.toList());
     toDos.update();

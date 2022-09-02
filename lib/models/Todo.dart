@@ -7,6 +7,7 @@ class ToDo {
   String name;
   String description;
   bool completed;
+  String color;
   int createdAt;
   String nodeKey;
   String userUID;
@@ -16,6 +17,7 @@ class ToDo {
       required this.name,
       required this.description,
       required this.completed,
+      required this.color,
       required this.createdAt,
       required this.nodeKey,
       required this.userUID});
@@ -26,6 +28,7 @@ class ToDo {
         name: jsonData['name'],
         description: jsonData['description'],
         completed: jsonData['completed'] ?? false,
+        color: jsonData['color'],
         createdAt: jsonData['createdAt'],
         nodeKey: jsonData['key'],
         userUID: jsonData['userUID']);
@@ -36,6 +39,7 @@ class ToDo {
         'name': toDo.name,
         'description': toDo.description,
         'completed': toDo.completed,
+        'color': toDo.color,
         'createdAt': toDo.createdAt,
         'userUID': toDo.userUID
       };
