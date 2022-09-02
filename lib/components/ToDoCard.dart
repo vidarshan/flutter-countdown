@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:to_dos/models/DynamicColor.dart';
 import 'dart:math' as math;
 
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
@@ -13,10 +14,18 @@ class ToDoCard extends StatelessWidget {
   final String title;
   final String description;
   final bool completed;
+  final String color;
   final int createdAt;
   final String nodeKey;
 
-  final List<Color> circleColors = [Colors.red, Colors.blue, Colors.green];
+  final List<DynamicColor> circleColors = [
+    DynamicColor(name: 'Red', color: Colors.red),
+    DynamicColor(name: 'Blue', color: Colors.blue),
+    DynamicColor(name: 'Green', color: Colors.green),
+    DynamicColor(name: 'Purple', color: Colors.purple),
+    DynamicColor(name: 'Black', color: Colors.black),
+    DynamicColor(name: 'Yellow', color: Colors.yellow),
+  ];
 
   ToDoCard(
       {Key? key,
@@ -24,13 +33,10 @@ class ToDoCard extends StatelessWidget {
       required this.title,
       required this.description,
       required this.completed,
+      required this.color,
       required this.createdAt,
       required this.nodeKey})
       : super(key: key);
-
-  Color randomGenerator() {
-    return circleColors[Random().nextInt(2)];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +81,13 @@ class ToDoCard extends StatelessWidget {
                               Row(
                                 children: [
                                   Column(
-                                    children: const [
+                                    children: [
                                       Icon(
                                         CupertinoIcons.circle_fill,
-                                        color: Colors.black,
+                                        color: circleColors
+                                            .firstWhere((element) =>
+                                                element.name == color)
+                                            .color,
                                         size: 12,
                                       ),
                                     ],
