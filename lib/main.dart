@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
+import 'package:to_dos/screens/SearchToDoScreen.dart';
 import 'package:to_dos/screens/SettingsScreen.dart';
 import 'package:to_dos/screens/ToDoInfoScreen.dart';
 import 'package:to_dos/screens/ToDoListScreen.dart';
@@ -12,10 +13,18 @@ import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/state.dart';
-import 'package:to_dos/state/user/state.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:to_dos/state/user/actions.dart';
+import 'firebase_options.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -26,13 +35,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeState themeState = ThemeState();
+  UserActions useractions = UserActions();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ToDoState()),
-          ChangeNotifierProvider(create: (context) => UserState()),
           ChangeNotifierProvider(
             create: (context) => ThemeState(),
           )
@@ -42,7 +51,23 @@ class _MyAppState extends State<MyApp> {
               textTheme:
                   CupertinoTextThemeData(primaryColor: globals.appAccentColor)),
           debugShowCheckedModeBanner: false,
-          home: const MyStatefulWidget(),
+          home: FutureBuilder(
+              future: useractions.getUser(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.error != null) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return snapshot.hasData
+                      ? const MyStatefulWidget()
+                      : LogInScreen();
+                } else {
+                  return const CupertinoPageScaffold(
+                      child: Center(
+                    child: Text('No'),
+                  ));
+                }
+              }),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
               case '/':
@@ -53,12 +78,13 @@ class _MyAppState extends State<MyApp> {
                     builder: (_) => const AddToDoScreen(), settings: settings);
               case '/info':
                 return CupertinoPageRoute(
-                    builder: (_) => ToDoInfoScreen(
+                    builder: (_) => const ToDoInfoScreen(
                           id: '',
                           title: '',
                           description: '',
                           completed: false,
-                          createdAt: DateTime.now(),
+                          createdAt: 0,
+                          nodeKey: '',
                         ),
                     settings: settings);
               case '/signup':
@@ -83,7 +109,8 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [
     ToDoListScreen(),
-    const AddToDoScreen(),
+    SearchToDoScreen(),
+    ToDoNotificationsScreen(),
     SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
@@ -102,34 +129,34 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 onPressed: () => Navigator.pushNamed(context, '/add'),
                 child: const Icon(
                   CupertinoIcons.add,
-                  color: Colors.green,
+                  color: Colors.blue,
                 ),
               ),
               middle: const Text(
                 'ToDos',
-                style: TextStyle(color: Colors.green),
-              ),
-              leading: const Icon(
-                CupertinoIcons.person_fill,
-                color: Colors.green,
-                size: 24,
+                style: TextStyle(color: Colors.blue),
               ),
             ),
             child: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
-                  activeColor: Colors.green,
-                  backgroundColor: theme.currentTheme == 'dark'
-                      ? Colors.black
-                      : Colors.white,
+                  activeColor: Colors.blue,
+                  // backgroundColor: CupertinoColors.quaternarySystemFill,
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(
-                        CupertinoIcons.square_list_fill,
+                        CupertinoIcons.list_bullet,
                         size: 24,
-                        color: Colors.green,
+                        color: Colors.blue,
                       ),
                       label: 'ToDos',
                     ),
+                    const BottomNavigationBarItem(
+                        icon: Icon(
+                          CupertinoIcons.search,
+                          color: Colors.blue,
+                          size: 24,
+                        ),
+                        label: 'Search'),
                     BottomNavigationBarItem(
                         icon: Badge(
                           animationType: BadgeAnimationType.fade,
@@ -140,8 +167,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           position: const BadgePosition(bottom: 4, start: 10),
                           badgeColor: globals.notificationBadgeColor,
                           child: const Icon(
-                            CupertinoIcons.bell_fill,
-                            color: Colors.green,
+                            CupertinoIcons.bell,
+                            color: Colors.blue,
                             size: 24,
                           ),
                         ),
@@ -149,10 +176,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     const BottomNavigationBarItem(
                         icon: Icon(
                           CupertinoIcons.settings,
-                          color: Colors.green,
+                          color: Colors.blue,
                           size: 24,
                         ),
-                        label: 'Settings')
+                        label: 'Settings'),
                   ],
                 ),
                 tabBuilder: (BuildContext context, index) {

@@ -1,63 +1,44 @@
-import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_dos/models/User.dart';
-import 'package:to_dos/state/user/state.dart';
-import 'package:uuid/uuid.dart';
+class UserActions with ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  get user => _auth.currentUser;
 
-class UserActions {
-  final BuildContext context;
-  late UserState user;
-  var uuid = const Uuid();
-
-  UserActions({required this.context}) {
-    user = Provider.of(context, listen: false);
+  Future<User?> getUser() async {
+    return _auth.currentUser;
   }
 
-  void readFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    var encodedUserList = prefs.getString('usersList');
-    if (encodedUserList == null) {
-      user.usersList = [];
-    } else {
-      var decodedUserList = User.decode(encodedUserList);
-      user.usersList = decodedUserList!;
+  static Future<String?> mailRegister(String mail, String pwd) async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: mail, password: pwd);
+      return null;
+    } on FirebaseAuthException catch (ex) {
+      return "${ex.code}: ${ex.message}";
     }
-    user.update();
   }
 
-  Future<void> addToSharedPreferences(List<User> uList) async {
-    final prefs = await SharedPreferences.getInstance();
-    var encodedToDoList = User.encode(user.usersList);
-    prefs.setString('usersList', encodedToDoList);
-  }
-
-  void register(username, password) {
-    readFromSharedPreferences();
-    for (var element in user.usersList) {
-      if (element.username == username) {
-        user.userError = 'User Exists';
-      }
+  Future<String?> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      notifyListeners();
+      return null;
+    } on FirebaseAuthException catch (ex) {
+      return "${ex.code}: ${ex.message}";
     }
+  }
 
-    if (user.userError != 'User Exists') {
-      var newUser = User(
-          id: uuid.v4(),
-          username: username,
-          password: password,
-          createdAt: DateTime.now());
-      user.usersList.add(newUser);
-      addToSharedPreferences(user.usersList);
-      user.currentUser = newUser;
+  Future loginUser(String email, String password) async {
+    try {
+      var result = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      // since something changed, let's notify the listeners...
+      notifyListeners();
+      return result;
+    } on FirebaseAuthException catch (ex) {
+      return "${ex.code}: ${ex.message}";
     }
-    user.update();
   }
-
-  void login(email, password) {
-    print('login');
-  }
-
-  //call update
 }

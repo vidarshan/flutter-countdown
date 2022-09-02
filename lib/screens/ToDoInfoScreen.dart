@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
+import 'package:to_dos/helpers/ToDo.dart' as toDoHelpers;
 
 class ToDoInfoScreen extends StatefulWidget {
   final String id;
   final String title;
   final String description;
   final bool completed;
-  final DateTime createdAt;
+  final int createdAt;
+  final String nodeKey;
 
   const ToDoInfoScreen(
       {Key? key,
@@ -18,7 +20,8 @@ class ToDoInfoScreen extends StatefulWidget {
       required this.title,
       required this.description,
       required this.completed,
-      required this.createdAt})
+      required this.createdAt,
+      required this.nodeKey})
       : super(key: key);
 
   @override
@@ -26,8 +29,8 @@ class ToDoInfoScreen extends StatefulWidget {
 }
 
 class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   late bool completed;
 
   late String title;
@@ -42,86 +45,58 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
     _titleController.text = widget.title;
     _descriptionController.text = widget.description;
     completed = widget.completed;
-
     title = widget.title;
     description = widget.description;
-
-    // toDoState.editListItem.id = widget.id;
-    // toDoState.editListItem.name = widget.title;
-    // toDoState.editListItem.description = widget.description;
-    // toDoState.editListItem.completed = widget.completed;
-    // toDoState.editListItem.createdAt = widget.createdAt;
   }
 
   void editToDo(id, title, description, completed, createdAt) {
-    print('wid ${id}');
-    print('id ${id}');
-    toDoActions.editToDo(id, title, description, completed, createdAt);
+    toDoHelpers.updateToDo(
+        id, title, description, completed, widget.createdAt, widget.nodeKey);
     Navigator.pop(context);
   }
 
-  // void onChange(field, value) {
-  //   if (field == 'title') {
-  //     toDoActions.setEditToDoItem(widget.id, value, widget.description,
-  //         widget.completed, widget.createdAt);
-  //   } else if (field == 'description') {
-  //     toDoActions.setEditToDoItem(
-  //         widget.id, widget.title, value, widget.completed, widget.createdAt);
-  //   } else {
-  //     toDoActions.setEditToDoItem(
-  //         widget.id, widget.title, widget.description, value, widget.createdAt);
-  //   }
-  // }
-
-  void deleteToDo(id) {
-    toDoActions.deleteToDo(id);
+  void deleteToDo() {
+    toDoHelpers.deleteToDo(widget.nodeKey);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd kk:mm').format(widget.createdAt);
-
     return CupertinoPageScaffold(
+        backgroundColor: Color.fromARGB(255, 239, 239, 239),
         navigationBar: const CupertinoNavigationBar(previousPageTitle: 'ToDos'),
-        child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 40,
-                  child: CupertinoTextField(
-                    placeholder: 'Todo Title',
+        child: SafeArea(
+          child: Container(
+            child: Column(children: [
+              CupertinoFormSection.insetGrouped(
+                header: const Text('TODO INFORMATION'),
+                children: [
+                  CupertinoTextFormFieldRow(
+                    prefix: const Text('Title'),
+                    placeholder: 'ToDo Title',
                     controller: _titleController,
-                    textInputAction: TextInputAction.next,
                     onChanged: (value) => setState(() {
                       title = value;
                     }),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SizedBox(
-                    height: 40,
-                    child: CupertinoTextField(
-                        controller: _descriptionController,
-                        placeholder: 'Todo Description',
-                        onChanged: (value) => setState(() {
-                              description = value;
-                            })),
+                  CupertinoTextFormFieldRow(
+                    prefix: const Text('Description'),
+                    placeholder: 'ToDo Description',
+                    controller: _descriptionController,
+                    onChanged: (value) => setState(() {
+                      description = value;
+                    }),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Row(
+                ],
+              ),
+              CupertinoFormSection.insetGrouped(
+                header: const Text('TODO STATUS'),
+                children: [
+                  CupertinoFormRow(
+                      child: Row(
                     children: [
                       const Text(
                         'Complete ToDo',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 189, 189, 189)),
                       ),
                       const Spacer(),
                       CupertinoSwitch(
@@ -130,39 +105,49 @@ class _ToDoInfoScreenState extends State<ToDoInfoScreen> {
                                 completed = value;
                               }))
                     ],
+                  ))
+                ],
+              ),
+              CupertinoFormSection.insetGrouped(
+                header: const Text('OTHER INFORMATION'),
+                children: [
+                  CupertinoTextFormFieldRow(
+                    prefix: const Text('Created At'),
+                    initialValue: DateFormat('yyyy-MM-dd kk:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(widget.createdAt)),
+                    enabled: false,
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Created at ${DateFormat('yyyy-MM-dd - h:mm a').format(widget.createdAt)}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                  CupertinoTextFormFieldRow(
+                    prefix: const Text('Updated At'),
+                    initialValue: DateFormat('yyyy-MM-dd kk:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(widget.createdAt)),
+                    enabled: false,
+                  ),
+                ],
+              ),
+              CupertinoFormSection.insetGrouped(
+                  header: const Text('ACTIONS'),
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: CupertinoButton.filled(
+                          onPressed: () => editToDo(widget.id, title,
+                              description, completed, widget.createdAt),
+                          child: const Text('Edit ToDo')),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SizedBox(
-                    width: double.maxFinite,
-                    child: CupertinoButton.filled(
-                        onPressed: () => editToDo(widget.id, title, description,
-                            completed, widget.createdAt),
-                        child: const Text('Edit Todo')),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SizedBox(
-                    width: double.maxFinite,
-                    child: CupertinoButton(
-                        color: Colors.redAccent,
-                        onPressed: () => deleteToDo(widget.id),
-                        child: const Text('Delete Todo')),
-                  ),
-                ),
-              ]),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: CupertinoButton(
+                            color: Colors.redAccent,
+                            onPressed: () => deleteToDo(),
+                            child: const Text('Delete ToDo')),
+                      ),
+                    ),
+                  ]),
+            ]),
+          ),
         ));
   }
 }

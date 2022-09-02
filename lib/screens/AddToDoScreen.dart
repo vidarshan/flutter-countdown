@@ -4,7 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/todo/actions.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:to_dos/constants/globals.dart' as globals;
+import 'package:to_dos/helpers/ToDo.dart' as toDoHelpers;
 
 class AddToDoScreen extends StatefulWidget {
   const AddToDoScreen({Key? key}) : super(key: key);
@@ -14,10 +17,21 @@ class AddToDoScreen extends StatefulWidget {
 }
 
 class _AddToDoScreenState extends State<AddToDoScreen> {
+  final toDoListRef = FirebaseDatabase.instance.ref('todos');
+  late DatabaseReference newToDoRef;
   late ToDoActions toDoActions = ToDoActions(context: context);
   String toDoName = '';
   String toDoDescription = '';
-  bool completed = false;
+  bool toDoCompleted = false;
+  final double _kItemExtent = 32.0;
+  final List<String> _fruitNames = <String>[
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Black',
+    'Purple',
+  ];
 
   @override
   void initState() {
@@ -25,8 +39,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   }
 
   void addToDo() {
-    toDoActions.addToDo(toDoName, toDoDescription, completed);
-
+    toDoHelpers.createNewToDo(toDoName, toDoDescription, toDoCompleted);
     Navigator.pop(context);
   }
 
@@ -42,6 +55,28 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int _selectedFruit = 0;
+
+    void _showDialog(Widget child) {
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => Container(
+                height: 216,
+                padding: const EdgeInsets.only(top: 6.0),
+                // The Bottom margin is provided to align the popup above the system navigation bar.
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                // Provide a background color for the popup.
+                color: CupertinoColors.systemBackground.resolveFrom(context),
+                // Use a SafeArea widget to avoid system overlaps.
+                child: SafeArea(
+                  top: false,
+                  child: child,
+                ),
+              ));
+    }
+
     return Consumer<ThemeState>(
       builder: ((context, theme, child) => CupertinoPageScaffold(
             backgroundColor: theme.currentTheme == 'dark'
@@ -78,20 +113,15 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                       ),
                       children: [
                         CupertinoTextFormFieldRow(
-                          // style: TextStyle(color: ),
                           placeholderStyle: TextStyle(
                               color: theme.currentTheme == 'dark'
                                   ? globals.darkPlaceHolderColor
                                   : globals.lightPlaceHolderColor),
-                          prefix: Text(
+                          prefix: const Text(
                             'Title',
-                            style: TextStyle(
-                                color: theme.currentTheme == 'dark'
-                                    ? globals.darkThemeTextColor
-                                    : globals.lightThemeTextColor),
                           ),
                           placeholder: 'Enter Title',
-                          onChanged: (value) => {toDoDescription = value},
+                          onChanged: (value) => {toDoName = value},
                         ),
                         CupertinoTextFormFieldRow(
                           placeholderStyle: TextStyle(
@@ -108,6 +138,44 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                           placeholder: 'Enter Description',
                           onChanged: (value) => {toDoDescription = value},
                         ),
+                        CupertinoFormRow(
+                            child: Row(
+                          children: [
+                            const Text('Prefix'),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: CupertinoButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () => _showDialog(
+                                  CupertinoPicker(
+                                    magnification: 1.22,
+                                    squeeze: 1.2,
+                                    useMagnifier: true,
+                                    itemExtent: _kItemExtent,
+                                    onSelectedItemChanged: (int selectedItem) {
+                                      setState(() {
+                                        _selectedFruit = selectedItem;
+                                      });
+                                    },
+                                    children: List<Widget>.generate(
+                                        _fruitNames.length, (int index) {
+                                      return Center(
+                                        child: Text(
+                                          _fruitNames[index],
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                child: Text(
+                                  _fruitNames[_selectedFruit],
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.black),
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
                       ]),
                   CupertinoFormSection.insetGrouped(
                       decoration: BoxDecoration(
@@ -136,9 +204,9 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                                       : globals.lightThemeTextColor),
                             ),
                             child: CupertinoSwitch(
-                                value: completed,
+                                value: toDoCompleted,
                                 onChanged: (value) => setState(() {
-                                      completed = value;
+                                      toDoCompleted = value;
                                     }))),
                       ]),
                   CupertinoFormSection.insetGrouped(
@@ -156,7 +224,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                           child: CupertinoButton(
                               color: globals.appAccentColor,
                               onPressed: addToDo,
-                              child: const Text('Add Todo')),
+                              child: const Text('Add ToDo')),
                         ),
                       )
                     ],

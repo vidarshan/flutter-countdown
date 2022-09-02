@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_dos/models/User.dart';
 import 'package:to_dos/state/theme/state.dart';
-import 'package:to_dos/state/user/state.dart';
 import 'package:uuid/uuid.dart';
 
 class ThemeActions {
@@ -17,7 +16,6 @@ class ThemeActions {
   }
 
   setTheme(theme) async {
-    print(theme);
     var setThemePrefs = await SharedPreferences.getInstance();
     setThemePrefs.setString('theme', theme);
     themeState.currentTheme = theme;

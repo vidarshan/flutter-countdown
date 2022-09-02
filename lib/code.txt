@@ -1,0 +1,79 @@
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    late String? email = '';
+    late String joined = '';
+    ThemeActions themeActions = ThemeActions(context: context);
+    UserActions userActions = UserActions();
+    userActions.getUser().then((value) => email = value?.email);
+    return Consumer<ThemeState>(
+      builder: (context, theme, child) => CupertinoPageScaffold(
+        child: Container(
+          child: Center(
+            child: (Form(
+              child: CupertinoFormSection.insetGrouped(
+                  decoration: BoxDecoration(
+                      color: theme.currentTheme == 'dark'
+                          ? globals.darkThemeColor
+                          : globals.lightThemeColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(8))),
+                  backgroundColor: theme.currentTheme == 'dark'
+                      ? globals.greyDarkBackgroundColor
+                      : globals.greyLightBackgroundColor,
+                  header: Text(
+                    'Theme'.toUpperCase(),
+                    style: TextStyle(
+                        color: theme.currentTheme == 'dark'
+                            ? globals.darkThemeTextColor
+                            : globals.lightThemeTextColor),
+                  ),
+                  children: [
+                    CupertinoFormRow(
+                      prefix: Text(
+                        'Email',
+                        style: TextStyle(
+                            color: theme.currentTheme == 'dark'
+                                ? globals.darkThemeTextColor
+                                : globals.lightThemeTextColor),
+                      ),
+                      child: CupertinoTextFormFieldRow(
+                        placeholder: 'vidarshan@gmail.com',
+                        initialValue: email,
+                        readOnly: true,
+                      ),
+                    ),
+                    CupertinoFormRow(
+                      prefix: Text(
+                        'Joined on',
+                        style: TextStyle(
+                            color: theme.currentTheme == 'dark'
+                                ? globals.darkThemeTextColor
+                                : globals.lightThemeTextColor),
+                      ),
+                      child: CupertinoTextFormFieldRow(
+                        placeholder: '2020-09-01',
+                        initialValue: email,
+                      ),
+                    ),
+                    CupertinoFormRow(
+                        prefix: Text(
+                          'Dark mode',
+                          style: TextStyle(
+                              color: theme.currentTheme == 'dark'
+                                  ? globals.darkThemeTextColor
+                                  : globals.lightThemeTextColor),
+                        ),
+                        child: CupertinoSwitch(
+                            value: theme.currentTheme == 'dark' ? true : false,
+                            onChanged: (value) => themeActions.setTheme(
+                                theme.currentTheme == 'dark'
+                                    ? 'light'
+                                    : 'dark'))),
+                  ]),
+            )),
+          ),
+        ),
+      ),
+    );
+  }
+}
