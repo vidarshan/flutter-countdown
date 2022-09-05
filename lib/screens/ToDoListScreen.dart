@@ -89,6 +89,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     userUID: toDo['userUID']));
               }
             }
+            toDoList.reversed;
           });
           return Column(
             children: [
