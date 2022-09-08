@@ -121,17 +121,17 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                         'All': Text(
                           'All',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w400),
+                              fontSize: 15, fontWeight: FontWeight.w400),
                         ),
                         'Completed': Text(
                           'Completed',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w400),
+                              fontSize: 15, fontWeight: FontWeight.w400),
                         ),
                         'Uncompleted': Text(
                           'Uncompleted',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w400),
+                              fontSize: 15, fontWeight: FontWeight.w400),
                         ),
                       }),
                 ),
