@@ -91,7 +91,8 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
             }
             toDoList.reversed;
           });
-          return Column(
+          return SafeArea(
+              child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(
@@ -161,9 +162,9 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                           },
                         )))
             ],
-          );
+          ));
         } else {
-          return const CupertinoPageScaffold(
+          return const SafeArea(
             child: Center(
               child: Text(
                 'You have no ToDos',

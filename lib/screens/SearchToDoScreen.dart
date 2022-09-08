@@ -58,7 +58,8 @@ class _SearchToDoScreenState extends State<SearchToDoScreen> {
                 userUID: toDo['userUID']));
           });
         }
-        return Container(
+        return SafeArea(
+            child: Container(
           child: Column(
             children: [
               Padding(
@@ -101,7 +102,7 @@ class _SearchToDoScreenState extends State<SearchToDoScreen> {
                     ))
             ],
           ),
-        );
+        ));
       },
     ));
   }

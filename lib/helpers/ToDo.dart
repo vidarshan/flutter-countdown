@@ -5,9 +5,23 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:uuid/uuid.dart';
 
 final toDoListRef = FirebaseDatabase.instance.ref('todos');
+final notificationRef = FirebaseDatabase.instance.ref('notifications');
 FirebaseAuth auth = FirebaseAuth.instance;
 
 void readToDos() {}
+
+void createNotification(title, description, todoID) {
+  DatabaseReference newNotificationRef = notificationRef.push();
+  Uuid uuid = const Uuid();
+  newNotificationRef.set({
+    'id': uuid.v4(),
+    'title': title,
+    'description': description,
+    'createdAt': ServerValue.timestamp,
+    'todoID': todoID,
+    'userUID': auth.currentUser?.uid,
+  });
+}
 
 void createNewToDo(title, description, completed, color) {
   DatabaseReference newToDoRef = toDoListRef.push();
@@ -24,16 +38,6 @@ void createNewToDo(title, description, completed, color) {
   });
 }
 
-// void searchToDos(keyword) {
-//   Query postListRef = FirebaseDatabase.instance
-//       .ref("todos")
-//       .orderByChild('title')
-//       .equalTo(keyword).once('value').then((value) => value.snapshot.);
-
-//   postListRef.onValue.length;
-//   print(postListRef);
-// }
-
 void updateToDo(id, title, description, completed, createdAt, nodeKey) {
   DatabaseReference ref =
       FirebaseDatabase.instance.ref().child('todos/$nodeKey');
@@ -42,9 +46,18 @@ void updateToDo(id, title, description, completed, createdAt, nodeKey) {
     "description": description,
     "completed": completed,
   });
+  if (completed == true) {
+    createNotification('Completed $title!', 'Nice work.', id);
+  }
 }
 
 void deleteToDo(nodekey) {
   DatabaseReference ref = FirebaseDatabase.instance.ref("todos/$nodekey");
+  ref.remove();
+}
+
+void deleteNotification(nodekey) {
+  DatabaseReference ref =
+      FirebaseDatabase.instance.ref("notifications/$nodekey");
   ref.remove();
 }

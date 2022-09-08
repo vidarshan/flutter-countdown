@@ -1,4 +1,6 @@
 import 'package:badges/badges.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -118,74 +120,88 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ToDoState, ThemeState>(
-      builder: ((context, toDos, theme, child) => CupertinoPageScaffold(
-              child: CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              backgroundColor:
-                  theme.currentTheme == 'dark' ? Colors.black : Colors.white,
-              trailing: CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pushNamed(context, '/add'),
-                child: const Icon(
-                  CupertinoIcons.add,
-                  color: Colors.blue,
-                ),
-              ),
-              middle: const Text(
-                'ToDos',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            child: CupertinoTabScaffold(
-                tabBar: CupertinoTabBar(
-                  activeColor: Colors.blue,
-                  // backgroundColor: CupertinoColors.quaternarySystemFill,
-                  items: [
-                    const BottomNavigationBarItem(
-                      icon: Icon(
-                        CupertinoIcons.list_bullet,
-                        size: 24,
+    FirebaseAuth auth = FirebaseAuth.instance;
+    Query notificationRef = FirebaseDatabase.instance.ref("notifications");
+    // .ref("notifications")
+    // .orderByChild('userUID')
+    // .equalTo(auth.currentUser?.uid);
+    return CupertinoPageScaffold(
+        child: StreamBuilder(
+            stream: notificationRef.onValue,
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  snapshot.data != null &&
+                  (snapshot.data! as DatabaseEvent).snapshot.value != null) {
+                final myMessages = Map<dynamic, dynamic>.from(
+                    (snapshot.data! as DatabaseEvent).snapshot.value
+                        as Map<dynamic, dynamic>);
+                return CupertinoPageScaffold(
+                  navigationBar: CupertinoNavigationBar(
+                    trailing: CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.pushNamed(context, '/add'),
+                      child: const Icon(
+                        CupertinoIcons.add,
                         color: Colors.blue,
                       ),
-                      label: 'ToDos',
                     ),
-                    const BottomNavigationBarItem(
-                        icon: Icon(
-                          CupertinoIcons.search,
-                          color: Colors.blue,
-                          size: 24,
-                        ),
-                        label: 'Search'),
-                    BottomNavigationBarItem(
-                        icon: Badge(
-                          animationType: BadgeAnimationType.fade,
-                          badgeContent: Text(
-                            toDos.notificationCount.toString(),
-                            style: const TextStyle(color: Colors.white),
+                    middle: const Text(
+                      'ToDos',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  child: CupertinoTabScaffold(
+                      tabBar: CupertinoTabBar(
+                        activeColor: Colors.blue,
+                        items: [
+                          const BottomNavigationBarItem(
+                            icon: Icon(
+                              CupertinoIcons.list_bullet,
+                              size: 24,
+                              color: Colors.blue,
+                            ),
+                            label: 'ToDos',
                           ),
-                          position: const BadgePosition(bottom: 4, start: 10),
-                          badgeColor: globals.notificationBadgeColor,
-                          child: const Icon(
-                            CupertinoIcons.bell,
-                            color: Colors.blue,
-                            size: 24,
-                          ),
-                        ),
-                        label: 'Notifications'),
-                    const BottomNavigationBarItem(
-                        icon: Icon(
-                          CupertinoIcons.settings,
-                          color: Colors.blue,
-                          size: 24,
-                        ),
-                        label: 'Settings'),
-                  ],
-                ),
-                tabBuilder: (BuildContext context, index) {
-                  return _tabs[index];
-                }),
-          ))),
-    );
+                          const BottomNavigationBarItem(
+                              icon: Icon(
+                                CupertinoIcons.search,
+                                color: Colors.blue,
+                                size: 24,
+                              ),
+                              label: 'Search'),
+                          BottomNavigationBarItem(
+                              icon: Badge(
+                                animationType: BadgeAnimationType.scale,
+                                badgeContent: Text(
+                                  myMessages.length.toString(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                position:
+                                    const BadgePosition(bottom: 4, start: 10),
+                                badgeColor: globals.notificationBadgeColor,
+                                child: const Icon(
+                                  CupertinoIcons.bell,
+                                  color: Colors.blue,
+                                  size: 24,
+                                ),
+                              ),
+                              label: 'Notifications'),
+                          const BottomNavigationBarItem(
+                              icon: Icon(
+                                CupertinoIcons.settings,
+                                color: Colors.blue,
+                                size: 24,
+                              ),
+                              label: 'Settings'),
+                        ],
+                      ),
+                      tabBuilder: (BuildContext context, index) {
+                        return _tabs[index];
+                      }),
+                );
+              } else {
+                return Text('no data');
+              }
+            }));
   }
 }

@@ -31,7 +31,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return ErrorScreen();
             }
             return snapshot.hasData
-                ? Container(
+                ? SafeArea(
+                    child: Container(
                     color: Color.fromARGB(255, 239, 239, 239),
                     child: Column(children: [
                       CupertinoFormSection.insetGrouped(
@@ -89,7 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ])
                     ]),
-                  )
+                  ))
                 : const Text('no data');
           } else {
             return ErrorScreen();

@@ -1,79 +1,71 @@
-class _SettingsScreenState extends State<SettingsScreen> {
-  @override
-  Widget build(BuildContext context) {
-    late String? email = '';
-    late String joined = '';
-    ThemeActions themeActions = ThemeActions(context: context);
-    UserActions userActions = UserActions();
-    userActions.getUser().then((value) => email = value?.email);
-    return Consumer<ThemeState>(
-      builder: (context, theme, child) => CupertinoPageScaffold(
-        child: Container(
-          child: Center(
-            child: (Form(
-              child: CupertinoFormSection.insetGrouped(
-                  decoration: BoxDecoration(
-                      color: theme.currentTheme == 'dark'
-                          ? globals.darkThemeColor
-                          : globals.lightThemeColor,
-                      borderRadius: const BorderRadius.all(Radius.circular(8))),
-                  backgroundColor: theme.currentTheme == 'dark'
-                      ? globals.greyDarkBackgroundColor
-                      : globals.greyLightBackgroundColor,
-                  header: Text(
-                    'Theme'.toUpperCase(),
-                    style: TextStyle(
-                        color: theme.currentTheme == 'dark'
-                            ? globals.darkThemeTextColor
-                            : globals.lightThemeTextColor),
-                  ),
-                  children: [
-                    CupertinoFormRow(
-                      prefix: Text(
-                        'Email',
-                        style: TextStyle(
-                            color: theme.currentTheme == 'dark'
-                                ? globals.darkThemeTextColor
-                                : globals.lightThemeTextColor),
-                      ),
-                      child: CupertinoTextFormFieldRow(
-                        placeholder: 'vidarshan@gmail.com',
-                        initialValue: email,
-                        readOnly: true,
-                      ),
-                    ),
-                    CupertinoFormRow(
-                      prefix: Text(
-                        'Joined on',
-                        style: TextStyle(
-                            color: theme.currentTheme == 'dark'
-                                ? globals.darkThemeTextColor
-                                : globals.lightThemeTextColor),
-                      ),
-                      child: CupertinoTextFormFieldRow(
-                        placeholder: '2020-09-01',
-                        initialValue: email,
-                      ),
-                    ),
-                    CupertinoFormRow(
-                        prefix: Text(
-                          'Dark mode',
-                          style: TextStyle(
-                              color: theme.currentTheme == 'dark'
-                                  ? globals.darkThemeTextColor
-                                  : globals.lightThemeTextColor),
-                        ),
-                        child: CupertinoSwitch(
-                            value: theme.currentTheme == 'dark' ? true : false,
-                            onChanged: (value) => themeActions.setTheme(
-                                theme.currentTheme == 'dark'
-                                    ? 'light'
-                                    : 'dark'))),
-                  ]),
-            )),
+Widget build(BuildContext context) {
+  return Consumer2<ToDoState, ThemeState>(
+    builder: ((context, toDos, theme, child) => CupertinoPageScaffold(
+            child: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            backgroundColor:
+                theme.currentTheme == 'dark' ? Colors.black : Colors.white,
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => Navigator.pushNamed(context, '/add'),
+              child: const Icon(
+                CupertinoIcons.add,
+                color: Colors.blue,
+              ),
+            ),
+            middle: const Text(
+              'ToDos',
+              style: TextStyle(color: Colors.blue),
+            ),
           ),
-        ),
-      ),
-    );
-  }
+          child: CupertinoTabScaffold(
+              tabBar: CupertinoTabBar(
+                activeColor: Colors.blue,
+                // backgroundColor: CupertinoColors.quaternarySystemFill,
+                items: [
+                  const BottomNavigationBarItem(
+                    icon: Icon(
+                      CupertinoIcons.list_bullet,
+                      size: 24,
+                      color: Colors.blue,
+                    ),
+                    label: 'ToDos',
+                  ),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        CupertinoIcons.search,
+                        color: Colors.blue,
+                        size: 24,
+                      ),
+                      label: 'Search'),
+                  BottomNavigationBarItem(
+                      icon: Badge(
+                        animationType: BadgeAnimationType.fade,
+                        badgeContent: Text(
+                          toDos.notificationCount.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        position: const BadgePosition(bottom: 4, start: 10),
+                        badgeColor: globals.notificationBadgeColor,
+                        child: const Icon(
+                          CupertinoIcons.bell,
+                          color: Colors.blue,
+                          size: 24,
+                        ),
+                      ),
+                      label: 'Notifications'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        CupertinoIcons.settings,
+                        color: Colors.blue,
+                        size: 24,
+                      ),
+                      label: 'Settings'),
+                ],
+              ),
+              tabBuilder: (BuildContext context, index) {
+                return _tabs[index];
+              }),
+        ))),
+  );
 }
