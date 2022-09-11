@@ -36,69 +36,87 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
+  void loginUser() {
+    userActions.loginUser(email, password);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        child: SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Align(
-            child: Padding(
-              padding: EdgeInsets.only(left: 16, bottom: 40),
-              child: Text(
-                'Login to your account',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Navigator.pushReplacementNamed(context, '/');
+            return const CupertinoPageScaffold(
+                child: SafeArea(
+                    child: Center(
+              child: CupertinoActivityIndicator(radius: 5.0, animating: true),
+            )));
+          } else {
+            return CupertinoPageScaffold(
+                child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 16, bottom: 40),
+                      child: Text(
+                        'Login to your account',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 28),
+                    child: SizedBox(
+                        height: 40,
+                        child: CupertinoTextField(
+                          controller: _emailController,
+                          placeholder: 'Your email',
+                          onChanged: (value) => email = value,
+                        )),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 28),
+                    child: SizedBox(
+                        height: 40,
+                        child: CupertinoTextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          placeholder: 'Your password',
+                          onChanged: (value) => password = value,
+                        )),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 0),
+                    child: SizedBox(
+                        width: double.maxFinite,
+                        child: CupertinoButton.filled(
+                            child: const Text('Log in'),
+                            onPressed: () => loginUser())),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 0),
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      child: CupertinoButton(
+                        child: const Text('New user?'),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/signup'),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: SizedBox(
-                height: 40,
-                child: CupertinoTextField(
-                  controller: _emailController,
-                  placeholder: 'Your email',
-                  onChanged: (value) => email = value,
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 28),
-            child: SizedBox(
-                height: 40,
-                child: CupertinoTextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  placeholder: 'Your password',
-                  onChanged: (value) => password = value,
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 0),
-            child: SizedBox(
-              width: double.maxFinite,
-              child: CupertinoButton.filled(
-                  child: const Text('Log in'),
-                  onPressed: () =>
-                      userActions.loginUser(email, password).then((value) => {
-                            if (value.user.uid != null)
-                              {Navigator.pushReplacementNamed(context, '/')}
-                          })),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 0),
-            child: SizedBox(
-              width: double.maxFinite,
-              child: CupertinoButton(
-                child: const Text('New user?'),
-                onPressed: () => Navigator.pushNamed(context, '/signup'),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ));
+            ));
+          }
+        });
   }
 }

@@ -9,15 +9,14 @@ import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/todo/actions.dart';
 
 class ToDoNotificationsScreen extends StatefulWidget {
-  ToDoNotificationsScreen({Key? key}) : super(key: key);
+  //final String notficationsList;
+  Map<String, dynamic> notificationsMap;
+  ToDoNotificationsScreen({Key? key, required this.notificationsMap})
+      : super(key: key);
 
   @override
   State<ToDoNotificationsScreen> createState() =>
       _ToDoNotificationsScreenState();
-}
-
-void clearAll() {
-  print('object');
 }
 
 class _ToDoNotificationsScreenState extends State<ToDoNotificationsScreen> {
@@ -28,6 +27,7 @@ class _ToDoNotificationsScreenState extends State<ToDoNotificationsScreen> {
         .ref("notifications")
         .orderByChild('userUID')
         .equalTo(auth.currentUser?.uid);
+
     return CupertinoPageScaffold(
         child: StreamBuilder(
       stream: postListRef.onValue,
@@ -54,18 +54,6 @@ class _ToDoNotificationsScreenState extends State<ToDoNotificationsScreen> {
           return SafeArea(
               child: Column(
             children: [
-              // const Padding(
-              //   padding:
-              //       EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
-              //   child: SizedBox(
-              //     width: double.maxFinite,
-              //     child: CupertinoButton(
-              //         onPressed: clearAll,
-              //         child: Text(
-              //           'Clear all',
-              //         )),
-              //   ),
-              // ),
               Container(
                   child: toDoList.isEmpty
                       ? const Center(

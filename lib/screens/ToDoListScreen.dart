@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:to_dos/components/ToDoCard.dart';
 import 'package:to_dos/models/Todo.dart';
 import 'package:to_dos/state/theme/state.dart';
+import 'package:to_dos/state/toDoNotifications/actions.dart';
 import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:to_dos/state/user/actions.dart';
@@ -22,6 +23,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   UserActions userActions = UserActions();
   var user = '';
   var completed = 'All';
+  var notificationCount = 0;
 
   @override
   void initState() {
@@ -36,6 +38,8 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ToDoNotificationsActions toDoNotificationsActions =
+        ToDoNotificationsActions(context: context);
     FirebaseAuth auth = FirebaseAuth.instance;
     Query postListRef = FirebaseDatabase.instance
         .ref("todos")
@@ -75,6 +79,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     createdAt: toDo['createdAt'],
                     nodeKey: key,
                     userUID: toDo['userUID']));
+                notificationCount++;
               }
             } else if (completed == 'Uncompleted') {
               if (!toDo['completed']) {
@@ -89,8 +94,9 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     userUID: toDo['userUID']));
               }
             }
-            toDoList.reversed;
           });
+
+          toDoNotificationsActions.setToDoNotificationCount(notificationCount);
           return SafeArea(
               child: Column(
             children: [

@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_dos/models/ToDoNotification.dart';
 import 'package:to_dos/screens/AddToDoScreen.dart';
 import 'package:to_dos/screens/SearchToDoScreen.dart';
 import 'package:to_dos/screens/SettingsScreen.dart';
@@ -14,6 +15,8 @@ import 'package:to_dos/screens/authentication/LogInScreen.dart';
 import 'package:to_dos/screens/authentication/SignUpScreen.dart';
 import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
+import 'package:to_dos/state/toDoNotifications/actions.dart';
+import 'package:to_dos/state/toDoNotifications/state.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:to_dos/state/user/actions.dart';
@@ -44,6 +47,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ToDoState()),
+          ChangeNotifierProvider(create: (context) => ToDoNotficationsState()),
           ChangeNotifierProvider(
             create: (context) => ThemeState(),
           )
@@ -53,21 +57,13 @@ class _MyAppState extends State<MyApp> {
               textTheme:
                   CupertinoTextThemeData(primaryColor: globals.appAccentColor)),
           debugShowCheckedModeBanner: false,
-          home: FutureBuilder(
-              future: useractions.getUser(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.error != null) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return snapshot.hasData
-                      ? const MyStatefulWidget()
-                      : LogInScreen();
+          home: StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return const MyStatefulWidget();
                 } else {
-                  return const CupertinoPageScaffold(
-                      child: Center(
-                    child: Text('No'),
-                  ));
+                  return LogInScreen();
                 }
               }),
           onGenerateRoute: (RouteSettings settings) {
@@ -109,99 +105,85 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  static Map<String, dynamic> toDoNotificationsMap = {};
   final List<Widget> _tabs = [
     ToDoListScreen(),
     SearchToDoScreen(),
-    ToDoNotificationsScreen(),
+    ToDoNotificationsScreen(notificationsMap: toDoNotificationsMap),
     SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
   ToDoState toDoState = ToDoState();
+  late ToDoNotificationsActions toDoNotificationsActions =
+      ToDoNotificationsActions(context: context);
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    Query notificationRef = FirebaseDatabase.instance.ref("notifications");
-    // .ref("notifications")
-    // .orderByChild('userUID')
-    // .equalTo(auth.currentUser?.uid);
-    return CupertinoPageScaffold(
-        child: StreamBuilder(
-            stream: notificationRef.onValue,
-            builder: (context, snapshot) {
-              if (snapshot.hasData &&
-                  snapshot.data != null &&
-                  (snapshot.data! as DatabaseEvent).snapshot.value != null) {
-                final myMessages = Map<dynamic, dynamic>.from(
-                    (snapshot.data! as DatabaseEvent).snapshot.value
-                        as Map<dynamic, dynamic>);
-                return CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    trailing: CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pushNamed(context, '/add'),
-                      child: const Icon(
-                        CupertinoIcons.add,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    middle: const Text(
-                      'ToDos',
-                      style: TextStyle(color: Colors.blue),
-                    ),
+    return Consumer2<ToDoNotficationsState, ThemeState>(
+        builder: ((context, toDoNotifications, theme, child) =>
+            CupertinoPageScaffold(
+                child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                trailing: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.pushNamed(context, '/add'),
+                  child: const Icon(
+                    CupertinoIcons.add,
+                    color: Colors.blue,
                   ),
-                  child: CupertinoTabScaffold(
-                      tabBar: CupertinoTabBar(
-                        activeColor: Colors.blue,
-                        items: [
-                          const BottomNavigationBarItem(
-                            icon: Icon(
-                              CupertinoIcons.list_bullet,
-                              size: 24,
-                              color: Colors.blue,
-                            ),
-                            label: 'ToDos',
-                          ),
-                          const BottomNavigationBarItem(
-                              icon: Icon(
-                                CupertinoIcons.search,
-                                color: Colors.blue,
-                                size: 24,
-                              ),
-                              label: 'Search'),
-                          BottomNavigationBarItem(
-                              icon: Badge(
-                                animationType: BadgeAnimationType.scale,
-                                badgeContent: Text(
-                                  myMessages.length.toString(),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                position:
-                                    const BadgePosition(bottom: 4, start: 10),
-                                badgeColor: globals.notificationBadgeColor,
-                                child: const Icon(
-                                  CupertinoIcons.bell,
-                                  color: Colors.blue,
-                                  size: 24,
-                                ),
-                              ),
-                              label: 'Notifications'),
-                          const BottomNavigationBarItem(
-                              icon: Icon(
-                                CupertinoIcons.settings,
-                                color: Colors.blue,
-                                size: 24,
-                              ),
-                              label: 'Settings'),
-                        ],
+                ),
+                middle: const Text(
+                  'ToDos',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+              child: CupertinoTabScaffold(
+                  tabBar: CupertinoTabBar(
+                    activeColor: Colors.blue,
+                    items: [
+                      const BottomNavigationBarItem(
+                        icon: Icon(
+                          CupertinoIcons.list_bullet,
+                          size: 24,
+                          color: Colors.blue,
+                        ),
+                        label: 'ToDos',
                       ),
-                      tabBuilder: (BuildContext context, index) {
-                        return _tabs[index];
-                      }),
-                );
-              } else {
-                return Text('no data');
-              }
-            }));
+                      const BottomNavigationBarItem(
+                          icon: Icon(
+                            CupertinoIcons.search,
+                            color: Colors.blue,
+                            size: 24,
+                          ),
+                          label: 'Search'),
+                      BottomNavigationBarItem(
+                          icon: Badge(
+                            animationType: BadgeAnimationType.scale,
+                            badgeContent: Text(
+                              '2',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            position: const BadgePosition(bottom: 4, start: 10),
+                            badgeColor: Colors.green,
+                            child: const Icon(
+                              CupertinoIcons.bell,
+                              color: Colors.blue,
+                              size: 24,
+                            ),
+                          ),
+                          label: 'Notifications'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(
+                            CupertinoIcons.settings,
+                            color: Colors.blue,
+                            size: 24,
+                          ),
+                          label: 'Settings'),
+                    ],
+                  ),
+                  tabBuilder: (BuildContext context, index) {
+                    return _tabs[index];
+                  }),
+            ))));
   }
 }

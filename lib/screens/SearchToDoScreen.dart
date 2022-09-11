@@ -27,7 +27,6 @@ class _SearchToDoScreenState extends State<SearchToDoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(toDoName);
     Query postListRef = FirebaseDatabase.instance
         .ref("todos")
         .orderByChild('title')

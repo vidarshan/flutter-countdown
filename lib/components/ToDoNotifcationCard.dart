@@ -25,7 +25,6 @@ class ToDoNotificationCard extends StatelessWidget {
 
   void deleteToDo(nodeKey) {
     toDoHelpers.deleteNotification(nodeKey);
-    print('object');
   }
 
   @override
