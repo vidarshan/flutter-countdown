@@ -79,7 +79,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     createdAt: toDo['createdAt'],
                     nodeKey: key,
                     userUID: toDo['userUID']));
-                notificationCount++;
+                print(toDoList);
               }
             } else if (completed == 'Uncompleted') {
               if (!toDo['completed']) {
@@ -94,9 +94,10 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     userUID: toDo['userUID']));
               }
             }
+            print('count $notificationCount');
+            toDoNotificationsActions
+                .setToDoNotificationCount(notificationCount);
           });
-
-          toDoNotificationsActions.setToDoNotificationCount(notificationCount);
           return SafeArea(
               child: Column(
             children: [

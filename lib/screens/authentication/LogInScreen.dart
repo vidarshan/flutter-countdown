@@ -46,7 +46,9 @@ class _LogInScreenState extends State<LogInScreen> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            Navigator.pushReplacementNamed(context, '/');
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Navigator.pushReplacementNamed(context, '/');
+            });
             return const CupertinoPageScaffold(
                 child: SafeArea(
                     child: Center(

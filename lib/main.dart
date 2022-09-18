@@ -17,6 +17,7 @@ import 'package:to_dos/state/theme/actions.dart';
 import 'package:to_dos/state/theme/state.dart';
 import 'package:to_dos/state/toDoNotifications/actions.dart';
 import 'package:to_dos/state/toDoNotifications/state.dart';
+import 'package:to_dos/state/todo/actions.dart';
 import 'package:to_dos/state/todo/state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:to_dos/state/user/actions.dart';
@@ -109,7 +110,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final List<Widget> _tabs = [
     ToDoListScreen(),
     SearchToDoScreen(),
-    ToDoNotificationsScreen(notificationsMap: toDoNotificationsMap),
+    ToDoNotificationsScreen(),
     SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
@@ -160,8 +161,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           icon: Badge(
                             animationType: BadgeAnimationType.scale,
                             badgeContent: Text(
-                              '2',
-                              style: TextStyle(color: Colors.white),
+                              toDoNotifications.notificationsCount.toString(),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             position: const BadgePosition(bottom: 4, start: 10),
                             badgeColor: Colors.green,

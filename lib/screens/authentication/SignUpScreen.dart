@@ -39,7 +39,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            Navigator.pushReplacementNamed(context, '/');
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Navigator.pushReplacementNamed(context, '/');
+            });
             return const CupertinoPageScaffold(
                 child: SafeArea(
                     child: Center(
@@ -121,8 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       width: double.maxFinite,
                       child: CupertinoButton(
                         child: const Text('Have an account?'),
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/signup'),
+                        onPressed: () => Navigator.pushNamed(context, '/login'),
                       ),
                     ),
                   ),

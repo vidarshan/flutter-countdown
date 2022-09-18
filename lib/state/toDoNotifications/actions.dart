@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_dos/models/ToDoNotification.dart';
@@ -16,6 +17,9 @@ class ToDoNotificationsActions {
   }
 
   void setToDoNotificationCount(newCount) {
-    toDoNotifications.notificationsCount = newCount;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      toDoNotifications.notificationsCount = newCount;
+      toDoNotifications.update();
+    });
   }
 }
