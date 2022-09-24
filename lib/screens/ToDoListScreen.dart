@@ -94,7 +94,6 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     userUID: toDo['userUID']));
               }
             }
-            print('count $notificationCount');
             toDoNotificationsActions
                 .setToDoNotificationCount(notificationCount);
           });

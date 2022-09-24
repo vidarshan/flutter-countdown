@@ -108,9 +108,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static Map<String, dynamic> toDoNotificationsMap = {};
   final List<Widget> _tabs = [
+    ToDoNotificationsScreen(),
     ToDoListScreen(),
     SearchToDoScreen(),
-    ToDoNotificationsScreen(),
     SettingsScreen()
   ];
   late ThemeActions themeActions = ThemeActions(context: context);
@@ -120,6 +120,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    Query postListRef = FirebaseDatabase.instance
+        .ref("notifications")
+        .orderByChild('userUID')
+        .equalTo(auth.currentUser?.uid);
     return Consumer2<ToDoNotficationsState, ThemeState>(
         builder: ((context, toDoNotifications, theme, child) =>
             CupertinoPageScaffold(
@@ -158,19 +163,60 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           ),
                           label: 'Search'),
                       BottomNavigationBarItem(
-                          icon: Badge(
-                            animationType: BadgeAnimationType.scale,
-                            badgeContent: Text(
-                              toDoNotifications.notificationsCount.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            position: const BadgePosition(bottom: 4, start: 10),
-                            badgeColor: Colors.green,
-                            child: const Icon(
-                              CupertinoIcons.bell,
-                              color: Colors.blue,
-                              size: 24,
-                            ),
+                          icon: StreamBuilder(
+                            stream: postListRef.onValue,
+                            builder: (context, snapshot) {
+                              List<ToDoNotification> toDoList = [];
+                              if (snapshot.hasData) {
+                                final myMessages = Map<dynamic, dynamic>.from(
+                                    (snapshot.data! as DatabaseEvent)
+                                        .snapshot
+                                        .value as Map<dynamic, dynamic>);
+                                myMessages.forEach((key, value) {
+                                  final toDo = Map<String, dynamic>.from(value);
+
+                                  toDoList.add(ToDoNotification(
+                                      id: toDo['id'],
+                                      title: toDo['title'],
+                                      description: toDo['description'],
+                                      createdAt: toDo['createdAt'],
+                                      todoID: toDo['todoID'],
+                                      userUID: toDo['userUID'],
+                                      nodeKey: key));
+                                });
+                                return Badge(
+                                  animationType: BadgeAnimationType.scale,
+                                  badgeContent: Text(
+                                    toDoList.length.toString(),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  position:
+                                      const BadgePosition(bottom: 4, start: 10),
+                                  badgeColor: Color.fromARGB(255, 97, 84, 83),
+                                  child: const Icon(
+                                    CupertinoIcons.bell,
+                                    color: Colors.blue,
+                                    size: 24,
+                                  ),
+                                );
+                              } else {
+                                return Badge(
+                                  animationType: BadgeAnimationType.scale,
+                                  badgeContent: const Text(
+                                    '1',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  position:
+                                      const BadgePosition(bottom: 4, start: 10),
+                                  badgeColor: Colors.green,
+                                  child: const Icon(
+                                    CupertinoIcons.bell,
+                                    color: Colors.blue,
+                                    size: 24,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                           label: 'Notifications'),
                       const BottomNavigationBarItem(
